@@ -5,12 +5,21 @@ import { fetchJson } from "../utils/helpers";
 
 const apiBase = "/wp-json/";
 
+/**
+ * FolderBox
+ * Allows users to create a new folder in Google Drive via the plugin API.
+ *
+ * Props:
+ * - showNotice: function to show success/error messages
+ * - loadFiles: function to reload the file list after creation
+ */
 const FolderBox = ({ showNotice, loadFiles }) => {
 	const [folderName, setFolderName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleCreateFolder = async () => {
-		if (!folderName.trim()) return;
+		const trimmedName = folderName.trim();
+		if (!trimmedName) return;
 
 		setIsLoading(true);
 		try {
@@ -19,7 +28,7 @@ const FolderBox = ({ showNotice, loadFiles }) => {
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ name: folderName.trim() }),
+					body: JSON.stringify({ name: trimmedName }),
 				}
 			);
 

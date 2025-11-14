@@ -13,87 +13,82 @@
  * @package           create-block
  */
 
-/**
- * Loader class for WPMUDEV Plugin Test.
- */
-
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit; // Exit if accessed directly
 }
 
-// Support for site-level autoloading.
+// -----------------------------------------------------------------------------
+// Autoloading
+// -----------------------------------------------------------------------------
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-    require_once __DIR__ . '/vendor/autoload.php';
+	require_once __DIR__ . '/vendor/autoload.php';
 }
 
+// -----------------------------------------------------------------------------
+// Load core classes
+// -----------------------------------------------------------------------------
+require_once plugin_dir_path( __FILE__ ) . 'core/class-dependency-manager.php';
+require_once plugin_dir_path( __FILE__ ) . 'core/class-changelog-manager.php';
 
-// Load Dependency Manager
-require_once plugin_dir_path(__FILE__) . 'core/class-dependency-manager.php';
-require_once plugin_dir_path(__FILE__) . 'core/class-changelog-manager.php';
-
-
-// Initialize environment and autoloader checks
+// -----------------------------------------------------------------------------
+// Initialize core managers
+// -----------------------------------------------------------------------------
 \WPMUDEV\PluginTest\Core\Dependency_Manager::init();
-
-// Initialize Changelog Manager
 \WPMUDEV\PluginTest\Core\Changelog_Manager::init();
 
+// -----------------------------------------------------------------------------
+// Plugin constants
+// -----------------------------------------------------------------------------
 
-/**
- * Plugin constants.
- */
-
-// Plugin version.
+// Plugin version
 if ( ! defined( 'WPMUDEV_PLUGINTEST_VERSION' ) ) {
 	define( 'WPMUDEV_PLUGINTEST_VERSION', '1.0.0' );
 }
 
-// Define WPMUDEV_PLUGINTEST_PLUGIN_FILE.
+// Main plugin file
 if ( ! defined( 'WPMUDEV_PLUGINTEST_PLUGIN_FILE' ) ) {
 	define( 'WPMUDEV_PLUGINTEST_PLUGIN_FILE', __FILE__ );
 }
 
-// Plugin directory.
+// Plugin directory
 if ( ! defined( 'WPMUDEV_PLUGINTEST_DIR' ) ) {
 	define( 'WPMUDEV_PLUGINTEST_DIR', plugin_dir_path( __FILE__ ) );
 }
 
-// Plugin url.
+// Plugin URL
 if ( ! defined( 'WPMUDEV_PLUGINTEST_URL' ) ) {
 	define( 'WPMUDEV_PLUGINTEST_URL', plugin_dir_url( __FILE__ ) );
 }
 
-// Assets url.
+// Assets URL
 if ( ! defined( 'WPMUDEV_PLUGINTEST_ASSETS_URL' ) ) {
-	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . 'assets' ); //remove trailing slash before the folder name "assets" - Adedayo
+	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . 'assets' ); // Adedayo: no trailing slash
 }
 
-// Shared UI Version.
+// Shared UI Version
 if ( ! defined( 'WPMUDEV_PLUGINTEST_SUI_VERSION' ) ) {
 	define( 'WPMUDEV_PLUGINTEST_SUI_VERSION', '2.12.23' );
 }
 
-
-/**
- * WPMUDEV_PluginTest class.
- */
+// -----------------------------------------------------------------------------
+// Main plugin class
+// -----------------------------------------------------------------------------
 class WPMUDEV_PluginTest {
 
 	/**
 	 * Holds the class instance.
 	 *
-	 * @var WPMUDEV_PluginTest $instance
+	 * @var WPMUDEV_PluginTest|null
 	 */
 	private static $instance = null;
 
+	// -------------------------------------------------------------------------
+	// Singleton instance
+	// -------------------------------------------------------------------------
 	/**
 	 * Return an instance of the class
 	 *
-	 * Return an instance of the WPMUDEV_PluginTest Class.
-	 *
-	 * @return WPMUDEV_PluginTest class instance.
-	 * @since 1.0.0
-	 *
+	 * @return WPMUDEV_PluginTest
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -103,21 +98,28 @@ class WPMUDEV_PluginTest {
 		return self::$instance;
 	}
 
+	// -------------------------------------------------------------------------
+	// Initialize plugin
+	// -------------------------------------------------------------------------
 	/**
-	 * Class initializer.
+	 * Class initializer
 	 */
 	public function load() {
+		// Load plugin translations
 		load_plugin_textdomain(
 			'wpmudev-plugin-test',
 			false,
 			dirname( plugin_basename( __FILE__ ) ) . '/languages'
 		);
 
+		// Initialize loader class
 		WPMUDEV\PluginTest\Loader::instance();
 	}
 }
 
-// Init the plugin and load the plugin instance for the first time.
+// -----------------------------------------------------------------------------
+// Initialize the plugin on 'init' hook
+// -----------------------------------------------------------------------------
 add_action(
 	'init',
 	function () {

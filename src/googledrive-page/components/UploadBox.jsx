@@ -10,17 +10,25 @@ import { humanSize } from "../utils/helpers";
 
 const apiBase = "/wp-json/";
 
+/**
+ * UploadBox component
+ * Allows drag/drop or picker-based upload to Google Drive.
+ */
 const UploadBox = ({ showNotice, loadFiles }) => {
 	const inputRef = useRef(null);
+
+	// State
 	const [selectedFiles, setSelectedFiles] = useState([]);
 	const [isUploading, setIsUploading] = useState(false);
 	const [isDragOver, setIsDragOver] = useState(false);
-	const [uploadMode, setUploadMode] = useState("sequential"); // "sequential" or "parallel"
+	const [uploadMode, setUploadMode] = useState("sequential"); // "sequential" | "parallel"
 
-	// user selected files
+	/**
+	 * User selects files from picker or drag/drop
+	 */
 	const onFilesSelected = (files) => {
-		const list = Array.from(files || []).map((f) => ({
-			file: f,
+		const list = Array.from(files || []).map((file) => ({
+			file,
 			progress: 0,
 			status: "pending",
 			message: "",
@@ -28,7 +36,9 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 		setSelectedFiles(list);
 	};
 
-	// upload one file
+	/**
+	 * Upload a single file
+	 */
 	const uploadSingle = (item, index) => {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
@@ -38,6 +48,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 			xhr.open("POST", apiBase + window.wpmudevDriveTest.restEndpointUpload);
 			xhr.setRequestHeader("X-WP-Nonce", window.wpmudevDriveTest.nonce);
 
+			// Track upload progress
 			xhr.upload.onprogress = (ev) => {
 				if (ev.lengthComputable) {
 					const pct = Math.round((ev.loaded / ev.total) * 100);
@@ -55,6 +66,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 				}
 			};
 
+			// Success
 			xhr.onload = () => {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					try {
@@ -62,6 +74,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 						const resItem = Array.isArray(json?.files)
 							? json.files[0]
 							: json?.file ?? null;
+
 						setSelectedFiles((prev) => {
 							const next = [...prev];
 							next[index] = {
@@ -99,6 +112,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 				}
 			};
 
+			// Network error
 			xhr.onerror = () => {
 				setSelectedFiles((prev) => {
 					const next = [...prev];
@@ -116,7 +130,9 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 		});
 	};
 
-	// unified upload handler
+	/**
+	 * Upload all selected files
+	 */
 	const handleUpload = async () => {
 		if (!selectedFiles.length) {
 			showNotice(
@@ -125,14 +141,15 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 			);
 			return;
 		}
+
 		setIsUploading(true);
 
 		if (uploadMode === "sequential") {
 			for (let i = 0; i < selectedFiles.length; i++) {
 				try {
 					await uploadSingle(selectedFiles[i], i);
-				} catch (err) {
-					// continue with next file
+				} catch {
+					// Continue next file even on error
 				}
 			}
 		} else {
@@ -145,21 +162,21 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 
 		setIsUploading(false);
 		if (inputRef.current) inputRef.current.value = "";
-		setPageCache({});
-		setPrevTokens([]);
-		setPage(1);
-		loadFiles("", 1);
-		//loadFiles(1);
-		//setTimeout(() => loadFiles(1), 1500);
+		setSelectedFiles([]);
+		loadFiles("", 1); // refresh file list after upload
 	};
 
-	// clear selection
+	/**
+	 * Clear selected files
+	 */
 	const clearSelection = () => {
 		if (inputRef.current) inputRef.current.value = "";
 		setSelectedFiles([]);
 	};
 
-	// drag & drop handlers
+	/**
+	 * Drag & drop handlers
+	 */
 	const onDragOver = (e) => {
 		e.preventDefault();
 		setIsDragOver(true);
@@ -168,19 +185,19 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 	const onDrop = (e) => {
 		e.preventDefault();
 		setIsDragOver(false);
-		if (e.dataTransfer.files.length) {
-			onFilesSelected(e.dataTransfer.files);
-		}
+		if (e.dataTransfer.files.length) onFilesSelected(e.dataTransfer.files);
 	};
 
 	return (
 		<div className="sui-box">
+			{/* Header */}
 			<div className="sui-box-header">
 				<h2 className="sui-box-title">
 					{__("Upload Files to Drive", "wpmudev-plugin-test")}
 				</h2>
 			</div>
 
+			{/* Drag & Drop Zone */}
 			<div
 				className={`sui-box-body drive-drop-zone ${
 					isDragOver ? "drag-over" : ""
@@ -206,6 +223,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 					className="drive-file-input"
 				/>
 
+				{/* Selected Files List */}
 				{selectedFiles.length > 0 && (
 					<div className="upload-file-list" style={{ marginTop: 10 }}>
 						{selectedFiles.map((it, idx) => (
@@ -231,6 +249,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 				)}
 			</div>
 
+			{/* Footer Actions */}
 			<div className="sui-box-footer">
 				<div className="sui-actions-left">
 					<Button
@@ -240,6 +259,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 					>
 						{__("Clear", "wpmudev-plugin-test")}
 					</Button>
+
 					<ToggleControl
 						label={__("Upload Mode", "wpmudev-plugin-test")}
 						help={
@@ -251,6 +271,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 						onChange={(val) => setUploadMode(val ? "parallel" : "sequential")}
 					/>
 				</div>
+
 				<div className="sui-actions-right">
 					<Button
 						variant="primary"

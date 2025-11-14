@@ -10,7 +10,7 @@ import { __ } from "@wordpress/i18n";
 import { Button, Spinner, Notice } from "@wordpress/components";
 import "./scss/style.scss";
 
-// Import modular components for better separation of concerns
+// Modular component imports
 import PostTypeSelector from "./components/PostTypeSelector";
 import PostList from "./components/PostList";
 import ScanHistory from "./components/ScanHistory";
@@ -19,18 +19,24 @@ import ScanHistory from "./components/ScanHistory";
 const domElement = document.getElementById("wpmudev-posts-maintenance-root");
 
 const PostsMaintenanceApp = () => {
-	// Track loading state during AJAX calls
+	/* ---------------- State Management ---------------- */
+	// Loading state during AJAX requests
 	const [isLoading, setIsLoading] = useState(false);
 
-	// Display success or error notifications
+	// Display success/error messages
 	const [notice, setNotice] = useState(null);
 
-	// Hold selected post type and post IDs
+	// Selected post type
 	const [selectedType, setSelectedType] = useState("");
+
+	// Selected post IDs
 	const [selectedPostIds, setSelectedPostIds] = useState([]);
 
+	/* ---------------- Helper Functions ---------------- */
 	/**
-	 * Helper: Display transient notice message for 5 seconds
+	 * Show a transient notice for 5 seconds
+	 * @param {string} message
+	 * @param {string} status - 'success' or 'error'
 	 */
 	const showNotice = (message, status = "success") => {
 		setNotice({ message, status });
@@ -38,8 +44,8 @@ const PostsMaintenanceApp = () => {
 	};
 
 	/**
-	 * Handle the post scan action.
-	 * Submits AJAX request to the backend handler (wpmudev_scan_posts).
+	 * Handle scanning posts
+	 * Sends AJAX request to backend (wpmudev_scan_posts)
 	 */
 	const handleScan = async () => {
 		setIsLoading(true);
@@ -48,22 +54,21 @@ const PostsMaintenanceApp = () => {
 			formData.append("action", "wpmudev_scan_posts");
 			formData.append("nonce", window.WPMUDEV_PM.nonce);
 
-			// Send selected post IDs if available, otherwise use post type
+			// Include selected post IDs if any; otherwise, post type
 			if (selectedPostIds.length > 0) {
 				selectedPostIds.forEach((id) => formData.append("post_ids[]", id));
 			} else if (selectedType) {
 				formData.append("post_types[]", selectedType);
 			}
 
-			// Perform AJAX request to WordPress admin-ajax.php
+			// Perform AJAX request
 			const res = await fetch(window.WPMUDEV_PM.ajax_url, {
 				method: "POST",
 				body: formData,
 			});
-
 			const json = await res.json();
 
-			// Handle success or error based on JSON response
+			// Handle response
 			if (json.success) {
 				showNotice(json.data.message, "success");
 			} else {
@@ -79,18 +84,19 @@ const PostsMaintenanceApp = () => {
 		}
 	};
 
+	/* ---------------- Render ---------------- */
 	return (
 		<div className="sui-box">
-			{/* Header Section */}
+			{/* Header */}
 			<div className="sui-box-header">
 				<h2 className="sui-box-title">
 					{__("Posts Maintenance", "wpmudev-plugin-test")}
 				</h2>
 			</div>
 
-			{/* Main Body Section */}
+			{/* Body */}
 			<div className="sui-box-body">
-				{/* Display active notice */}
+				{/* Active notice */}
 				{notice && (
 					<Notice
 						status={notice.status === "error" ? "error" : "success"}
@@ -109,17 +115,17 @@ const PostsMaintenanceApp = () => {
 					)}
 				</p>
 
-				{/* Post type selection dropdown */}
+				{/* Post type selector */}
 				<PostTypeSelector
 					postTypes={window.WPMUDEV_PM.postTypes}
 					onChange={(e) => {
 						const type = Array.from(e.target.selectedOptions)[0]?.value;
 						setSelectedType(type);
-						setSelectedPostIds([]); // Reset post selection when type changes
+						setSelectedPostIds([]); // Reset posts when type changes
 					}}
 				/>
 
-				{/* Conditionally render PostList once a type is selected */}
+				{/* Post list for selected type */}
 				{selectedType && (
 					<PostList
 						selectedType={selectedType}
@@ -127,11 +133,11 @@ const PostsMaintenanceApp = () => {
 					/>
 				)}
 
-				{/* Display scan log history */}
+				{/* Scan history */}
 				<ScanHistory />
 			</div>
 
-			{/* Footer with scan button */}
+			{/* Footer with Scan button */}
 			<div className="sui-box-footer">
 				<Button
 					variant="primary"
@@ -147,10 +153,8 @@ const PostsMaintenanceApp = () => {
 	);
 };
 
-/* ---------------- Bootstrap ----------------
- * Mount React app using React 18's createRoot if available.
- * Fallback to render() for older WordPress setups.
- */
+/* ---------------- Bootstrap ---------------- */
+// Use React 18 createRoot if available; fallback to render for older setups
 if (createRoot) {
 	createRoot(domElement).render(
 		<StrictMode>

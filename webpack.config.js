@@ -14,23 +14,32 @@ const RTLPlugin = require("rtlcss-webpack-plugin");
 const DependencyExtractionWebpackPlugin = require("@wordpress/dependency-extraction-webpack-plugin");
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 
+// -----------------------------------------------------------------------------
 // Define paths for PurgeCSS scanning
+// -----------------------------------------------------------------------------
 const PATHS = {
 	src: path.join(__dirname, "src"),
 	app: path.join(__dirname, "app"),
 	core: path.join(__dirname, "core"),
 };
 
+// -----------------------------------------------------------------------------
+// Export Webpack configuration
+// -----------------------------------------------------------------------------
 module.exports = {
 	...defaultConfig,
 
+	// -------------------------------------------------------------------------
 	// Entry points for your admin pages
+	// -------------------------------------------------------------------------
 	entry: {
 		drivetestpage: "./src/googledrive-page/main.jsx",
 		postsmaintenancepage: "./src/posts-maintenance/main.jsx",
 	},
 
+	// -------------------------------------------------------------------------
 	// Output settings
+	// -------------------------------------------------------------------------
 	output: {
 		path: path.resolve(__dirname, "assets/js"),
 		filename: "[name].min.js",
@@ -39,10 +48,16 @@ module.exports = {
 		clean: true,
 	},
 
+	// -------------------------------------------------------------------------
+	// Module resolution
+	// -------------------------------------------------------------------------
 	resolve: {
 		extensions: [".js", ".jsx"], // Auto-resolve JS and JSX files
 	},
 
+	// -------------------------------------------------------------------------
+	// Module rules: JS, CSS/SCSS, images, fonts
+	// -------------------------------------------------------------------------
 	module: {
 		...defaultConfig.module,
 		rules: [
@@ -83,7 +98,9 @@ module.exports = {
 		],
 	},
 
+	// -------------------------------------------------------------------------
 	// WordPress externals
+	// -------------------------------------------------------------------------
 	externals: {
 		react: "React",
 		"react-dom": "ReactDOM",
@@ -93,8 +110,11 @@ module.exports = {
 		"@wordpress/api-fetch": "wp.apiFetch",
 	},
 
+	// -------------------------------------------------------------------------
+	// Plugins
+	// -------------------------------------------------------------------------
 	plugins: [
-		// Must come first for proper .asset.php generation
+		// 1. Extract WP dependencies to separate scripts
 		new DependencyExtractionWebpackPlugin({
 			injectPolyfill: true,
 			requestToExternal: (request) => {
@@ -105,15 +125,15 @@ module.exports = {
 			},
 		}),
 
-		// Clean output folder before build
+		// 2. Clean output folder before each build
 		new CleanWebpackPlugin(),
 
-		// Extract CSS to separate files
+		// 3. Extract CSS into separate files
 		new MiniCssExtractPlugin({
 			filename: "../css/[name].min.css",
 		}),
 
-		// Purge unused CSS
+		// 4. Purge unused CSS
 		new PurgeCSSPlugin({
 			paths: [
 				...glob.sync(`${PATHS.src}/**/*.{js,jsx,php}`, { nodir: true }),
@@ -123,13 +143,15 @@ module.exports = {
 			safelist: { standard: [/wpmudev-/] },
 		}),
 
-		// Generate RTL CSS automatically
+		// 5. Generate RTL CSS automatically
 		new RTLPlugin({
 			filename: "../css/[name]-rtl.min.css",
 		}),
 	],
 
-	// Minification and optimization
+	// -------------------------------------------------------------------------
+	// Optimization and minification
+	// -------------------------------------------------------------------------
 	optimization: {
 		minimize: true,
 		minimizer: [
@@ -143,11 +165,17 @@ module.exports = {
 		},
 	},
 
+	// -------------------------------------------------------------------------
+	// Performance hints
+	// -------------------------------------------------------------------------
 	performance: {
 		hints: "warning",
 		maxEntrypointSize: 500000,
 		maxAssetSize: 500000,
 	},
 
+	// -------------------------------------------------------------------------
+	// Stats configuration
+	// -------------------------------------------------------------------------
 	stats: { children: true },
 };

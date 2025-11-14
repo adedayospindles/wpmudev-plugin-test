@@ -3,12 +3,14 @@ import { __ } from "@wordpress/i18n";
 /**
  * PostTypeSelector Component
  *
- * @param {Array} postTypes - List of available post types { name, label }.
- * @param {Function} onChange - Callback when selection changes.
+ * Renders a dropdown (or multi-select) for selecting post types.
+ *
+ * @param {Array} postTypes - List of available post types [{ name, label }].
+ * @param {Function} onChange - Callback invoked when selection changes.
  * @param {boolean} multiple - Whether multiple selection is allowed (default: true).
  */
 const PostTypeSelector = ({ postTypes, onChange, multiple = true }) => {
-	// Handle empty or invalid post types
+	/* ---------------- Handle missing or invalid post types ---------------- */
 	if (!Array.isArray(postTypes) || postTypes.length === 0) {
 		return (
 			<p style={{ color: "red", marginTop: "1em" }}>
@@ -20,6 +22,7 @@ const PostTypeSelector = ({ postTypes, onChange, multiple = true }) => {
 		);
 	}
 
+	/* ---------------- Render dropdown ---------------- */
 	return (
 		<select
 			multiple={multiple}

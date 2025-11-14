@@ -1,8 +1,9 @@
 <?php
 /**
- * WP-CLI command for Posts Maintenance
+ * WP-CLI command for Posts Maintenance.
  *
- * Scans posts and pages, updates meta, logs scan events, and provides progress feedback.
+ * Scans posts and pages, updates meta, logs scan events,
+ * and provides progress feedback.
  *
  * @package WPMUDEV\PluginTest\CLI
  */
@@ -16,39 +17,50 @@ use WP_CLI_Command;
 
 class Posts_Maintenance_CLI extends WP_CLI_Command {
 
+    /*--------------------------------------------------------------
+    # MAIN COMMAND: POSTS MAINTENANCE SCAN
+    --------------------------------------------------------------*/
+
     /**
-     * Scan posts and pages, update meta for maintenance, and log scan events.
+     * Scan posts/pages, update meta, and log events.
      *
      * ## OPTIONS
      *
      * [--post_type=<type>]
-     * : Comma-separated list of post types to scan. Default: 'post,page'.
+     * : Comma-separated list of post types. Default: 'post,page'.
      *
      * [--batch=<number>]
-     * : Number of posts to process per batch. Default: 20.
+     * : Batch size per cycle. Default: 20.
      *
      * [--simulate]
-     * : Optional flag to simulate the process without updating meta.
+     * : Run without saving updates.
      *
      * ## EXAMPLES
      *
-     *     wp wpmudev posts-maintenance
-     *     wp wpmudev posts-maintenance --post_type=post,page
-     *     wp wpmudev posts-maintenance --post_type=custom_post --batch=50
-     *     wp wpmudev posts-maintenance --simulate
+     * wp wpmudev posts-maintenance
+     * wp wpmudev posts-maintenance --post_type=post,page
+     * wp wpmudev posts-maintenance --post_type=product --batch=50
+     * wp wpmudev posts-maintenance --simulate
      *
      * @when after_wp_load
      */
     public function __invoke($args, $assoc_args) {
 
+        // Determine post types
         $post_types = !empty($assoc_args['post_type'])
             ? array_map('trim', explode(',', $assoc_args['post_type']))
             : ['post', 'page'];
 
+        // Determine batch size
         $batch_size = !empty($assoc_args['batch']) ? intval($assoc_args['batch']) : 20;
+
+        // Simulation flag (no saving)
         $simulate = !empty($assoc_args['simulate']);
 
-        // Get total posts count for progress bar
+        /*--------------------------------------------------------------
+        # PREP: COLLECT ALL POSTS
+        --------------------------------------------------------------*/
+
         $all_posts = get_posts([
             'post_type'   => $post_types,
             'post_status' => 'publish',
@@ -63,16 +75,22 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
             return;
         }
 
-        $total_processed = 0;
-        $total_failed = 0;
-        $page = 1;
-
         WP_CLI::log("Starting Posts Maintenance scan for post types: " . implode(', ', $post_types));
         WP_CLI::log("Total posts to process: {$total_posts}");
 
+        // Progress bar setup
         $progress = \WP_CLI\Utils\make_progress_bar('Processing posts', $total_posts);
 
+        $total_processed = 0;
+        $total_failed    = 0;
+        $page            = 1;
+
+        /*--------------------------------------------------------------
+        # PROCESSING LOOP
+        --------------------------------------------------------------*/
+
         do {
+            // Query next batch
             $query_args = [
                 'post_type'      => $post_types,
                 'post_status'    => 'publish',
@@ -83,12 +101,19 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
 
             $query = new \WP_Query($query_args);
 
-            if (!$query->have_posts()) break;
+            if (!$query->have_posts()) {
+                break;
+            }
 
+            // Handle each post in batch
             foreach ($query->posts as $post_id) {
 
+                // Only update if not simulating
                 if (!$simulate) {
+
+                    // Write maintenance timestamp
                     $updated = update_post_meta($post_id, 'wpmudev_test_last_scan', current_time('timestamp'));
+
                     if ($updated === false) {
                         $total_failed++;
                         WP_CLI::warning("Failed to update post ID {$post_id}");
@@ -96,7 +121,7 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
                         continue;
                     }
 
-                    // Log scan event like admin scan
+                    // Log the scan event
                     $this->log_scan_event($post_id, 'cli');
                 }
 
@@ -106,32 +131,45 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
 
             $page++;
 
-            // Clean up to free memory
+            // Clean memory
             wp_reset_postdata();
 
         } while (count($query->posts) === $batch_size);
+
+        /*--------------------------------------------------------------
+        # WRAP-UP
+        --------------------------------------------------------------*/
 
         $progress->finish();
 
         WP_CLI::success("Posts Maintenance completed.");
         WP_CLI::success("Total posts processed: {$total_processed}");
+
         if ($total_failed > 0) {
             WP_CLI::warning("Total posts failed to update: {$total_failed}");
         }
+
         if ($simulate) {
             WP_CLI::log("Simulation mode enabled. No meta was actually updated.");
         }
     }
 
+    /*--------------------------------------------------------------
+    # HELPERS
+    --------------------------------------------------------------*/
+
     /**
-     * Log a scan event (similar to admin scan logging).
+     * Log a scan event.
      *
-     * @param int $post_id
-     * @param string $source
+     * @param int    $post_id Post ID.
+     * @param string $source  Event source (cli/admin).
      */
     private function log_scan_event($post_id, $source = 'cli') {
+
+        // Retrieve existing log list
         $log = get_option('wpmudev_scan_log', []);
 
+        // Add new log entry
         $log[] = [
             'timestamp' => current_time('mysql'),
             'post_id'   => $post_id,
@@ -139,7 +177,7 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
             'source'    => $source,
         ];
 
-        // Keep only the most recent 100 logs
+        // Keep last 100 logs only
         if (count($log) > 100) {
             $log = array_slice($log, -100);
         }
@@ -148,7 +186,10 @@ class Posts_Maintenance_CLI extends WP_CLI_Command {
     }
 }
 
-// Register WP-CLI command
+/*--------------------------------------------------------------
+# REGISTER CLI COMMAND
+--------------------------------------------------------------*/
+
 if (defined('WP_CLI') && WP_CLI) {
     WP_CLI::add_command('wpmudev posts-maintenance', __NAMESPACE__ . '\\Posts_Maintenance_CLI');
 }

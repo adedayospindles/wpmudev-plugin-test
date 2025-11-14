@@ -3,15 +3,22 @@ import { __ } from "@wordpress/i18n";
 import { Spinner, SelectControl, Button } from "@wordpress/components";
 import { fetchScanHistory } from "../utils/fetchScanHistory";
 
-const ITEMS_PER_PAGE = 10; // Number of entries per page
+const ITEMS_PER_PAGE = 10; // Number of entries displayed per page
 
+/**
+ * ScanHistory Component
+ *
+ * Displays a paginated, filterable history of post scans.
+ */
 const ScanHistory = () => {
+	/* ---------------- State Management ---------------- */
 	const [history, setHistory] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [filterType, setFilterType] = useState("");
 	const [filterSource, setFilterSource] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 
+	/* ---------------- Fetch scan history on mount ---------------- */
 	useEffect(() => {
 		fetchScanHistory(
 			window.WPMUDEV_PM.nonce,
@@ -21,7 +28,7 @@ const ScanHistory = () => {
 		);
 	}, []);
 
-	// Filter history
+	/* ---------------- Filter history entries ---------------- */
 	const filtered = history.filter((entry) => {
 		return (
 			(!filterType || entry.type === filterType) &&
@@ -29,7 +36,7 @@ const ScanHistory = () => {
 		);
 	});
 
-	// Pagination
+	/* ---------------- Pagination logic ---------------- */
 	const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
 	const paginated = filtered.slice(
 		(currentPage - 1) * ITEMS_PER_PAGE,
@@ -41,15 +48,17 @@ const ScanHistory = () => {
 	const goToPage = (page) =>
 		setCurrentPage(Math.min(Math.max(page, 1), totalPages));
 
-	// Reset page when filter changes
+	// Reset page to first when filters change
 	useEffect(() => {
 		setCurrentPage(1);
 	}, [filterType, filterSource]);
 
+	/* ---------------- Render ---------------- */
 	return (
 		<div className="pm-scan-history">
 			<h4>{__("Scan History", "wpmudev-plugin-test")}</h4>
 
+			{/* ---------------- Filters ---------------- */}
 			<div style={{ display: "flex", gap: "1em", marginBottom: "1em" }}>
 				<SelectControl
 					label={__("Filter by Post Type", "wpmudev-plugin-test")}
@@ -63,6 +72,7 @@ const ScanHistory = () => {
 					]}
 					onChange={(val) => setFilterType(val)}
 				/>
+
 				<SelectControl
 					label={__("Filter by Source", "wpmudev-plugin-test")}
 					value={filterSource}
@@ -82,10 +92,12 @@ const ScanHistory = () => {
 				/>
 			</div>
 
+			{/* ---------------- Loading & Table ---------------- */}
 			{isLoading ? (
 				<Spinner />
 			) : paginated.length > 0 ? (
 				<>
+					{/* ---------------- History Table ---------------- */}
 					<table className="pm-history-table">
 						<thead>
 							<tr>
@@ -107,6 +119,7 @@ const ScanHistory = () => {
 						</tbody>
 					</table>
 
+					{/* ---------------- Pagination Controls ---------------- */}
 					<div
 						style={{
 							marginTop: "1em",

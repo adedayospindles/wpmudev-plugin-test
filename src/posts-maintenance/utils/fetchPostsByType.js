@@ -14,14 +14,17 @@ export const fetchPostsByType = async (
 	setAvailablePosts
 ) => {
 	try {
+		/* ---------------- Prepare FormData ---------------- */
 		const formData = new FormData();
 		formData.append("action", "wpmudev_get_posts_by_type");
 		formData.append("nonce", nonce);
 		formData.append("post_type", type);
 
+		/* ---------------- Perform AJAX Request ---------------- */
 		const res = await fetch(ajaxUrl, { method: "POST", body: formData });
 		const json = await res.json();
 
+		/* ---------------- Handle Response ---------------- */
 		if (json.success && Array.isArray(json.data.posts)) {
 			setAvailablePosts?.(json.data.posts);
 			return json.data.posts;
@@ -30,6 +33,7 @@ export const fetchPostsByType = async (
 			return [];
 		}
 	} catch (error) {
+		/* ---------------- Error Handling ---------------- */
 		console.error("Failed to fetch posts:", error);
 		return [];
 	}

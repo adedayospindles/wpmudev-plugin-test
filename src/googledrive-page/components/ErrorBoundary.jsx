@@ -1,11 +1,22 @@
 import { createInterpolateElement } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 
+/**
+ * ErrorBoundary component
+ * Catches rendering errors in child components and displays a fallback UI.
+ *
+ * Note: This is a simple functional try/catch boundary. For full React error boundaries
+ * consider using a class-based component with componentDidCatch.
+ */
 const ErrorBoundary = ({ children }) => {
 	try {
+		// Attempt to render children
 		return children;
 	} catch (err) {
+		// Log error to console for debugging
 		console.error("DriveApp error boundary caught:", err);
+
+		// Display fallback UI
 		return (
 			<div className="sui-box sui-box-error">
 				<div className="sui-box-header">
@@ -13,6 +24,7 @@ const ErrorBoundary = ({ children }) => {
 						{__("Something went wrong", "wpmudev-plugin-test")}
 					</h2>
 				</div>
+
 				<div className="sui-box-body">
 					<p>
 						{__(

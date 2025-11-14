@@ -1,28 +1,33 @@
 <?php
 /**
- * REST API Authentication and Drive Endpoint Tests
+ * REST API Authentication and Google Drive Endpoint Tests
  *
  * @package WPMUDEV_Plugin_Test
  */
 
 use WPMUDEV\PluginTest\Endpoints\V1\Drive_API;
 
-// ----------------------------
-// Test subclass with safe handlers
-// ----------------------------
+// -----------------------------------------------------------------------------
+// Test Subclass: Drive_API_Test
+// Purpose: Provides safe stubbed methods to avoid real API calls
+// -----------------------------------------------------------------------------
 class Drive_API_Test extends Drive_API {
-    // Declare properties to avoid "dynamic property" deprecation warnings
+    // Avoid "dynamic property" deprecation warnings
     public $client;
     public $drive_service;
 
+    /**
+     * Setup a mocked Google client and Drive service
+     */
     public function setup_google_client(): void {
-        // Stub client with only the method you need
+        // Mock client with only the required method
         $this->client = new class {
             public function createAuthUrl() {
                 return 'https://mock.google.com/auth?client_id=test';
             }
         };
-        // Stub drive service with minimal structure
+
+        // Mock Drive service with minimal structure
         $this->drive_service = new class {
             public $files;
             public function __construct() {
@@ -38,23 +43,28 @@ class Drive_API_Test extends Drive_API {
         };
     }
 
-    // Override crypto to avoid OpenSSL
+    // Override crypto to avoid OpenSSL calls
     protected function encrypt(string $plaintext): string { return $plaintext; }
     protected function decrypt(string $ciphertext): string { return $ciphertext; }
 
-    // Direct handlers
+    // -------------------------------------------------------------------------
+    // Direct Route Handlers (stubbed)
+    // -------------------------------------------------------------------------
     public function route_auth_start(WP_REST_Request $request) {
         $this->setup_google_client();
         return new WP_REST_Response(['auth_url' => $this->client->createAuthUrl()], 200);
     }
+
     public function route_auth_callback(WP_REST_Request $request) {
         update_option('wpmudev_drive_access_token', 'mock_auth');
         update_option('wpmudev_drive_refresh_token', 'mock_refresh');
         return new WP_REST_Response(['status' => 'ok'], 200);
     }
+
     public function route_list_files(WP_REST_Request $request) {
         return new WP_REST_Response(['files' => []], 200);
     }
+
     public function route_upload_file(WP_REST_Request $request) {
         return new WP_REST_Response([
             'file' => [
@@ -66,6 +76,7 @@ class Drive_API_Test extends Drive_API {
             ],
         ], 200);
     }
+
     public function route_create_folder(WP_REST_Request $request) {
         return new WP_REST_Response([
             'folder' => [
@@ -74,6 +85,7 @@ class Drive_API_Test extends Drive_API {
             ],
         ], 200);
     }
+
     public function route_download_file(WP_REST_Request $request) {
         return new WP_REST_Response([
             'content'  => base64_encode('mock content'),
@@ -82,18 +94,26 @@ class Drive_API_Test extends Drive_API {
     }
 }
 
-// ----------------------------
-// Test Class
-// ----------------------------
+// -----------------------------------------------------------------------------
+// Test Class: TestAPIAuth
+// Purpose: Unit tests for the Drive_API_Test class
+// -----------------------------------------------------------------------------
 class TestAPIAuth extends WP_Test_REST_TestCase {
 
     protected static $api;
 
+    // ----------------------------
+    // Setup & Teardown
+    // ----------------------------
     public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
+
+        // Instantiate the test API without constructor
         $ref = new ReflectionClass(Drive_API_Test::class);
         self::$api = $ref->newInstanceWithoutConstructor();
         self::$api->setup_google_client();
+
+        // Set dummy plugin options
         update_option('wpmudev_plugin_tests_auth', [
             'client_id'     => '83665405138-5ithsl2heno365lkgaled0629do1rmkt.apps.googleusercontent.com',
             'client_secret' => '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',
@@ -109,11 +129,12 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
     }
 
     // ----------------------------
-    // Authentication endpoint tests
+    // Authentication Endpoint Tests
     // ----------------------------
     public function test_start_auth_success() {
         $response = self::$api->route_auth_start(new WP_REST_Request('POST', '/wpmudev/v1/drive/auth'));
         $data = $response->get_data();
+
         $this->assertArrayHasKey('auth_url', $data);
         $this->assertStringContainsString('mock.google.com', $data['auth_url']);
     }
@@ -122,16 +143,18 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
         $response = self::$api->route_auth_callback(new WP_REST_Request('GET', '/wpmudev/v1/drive/callback'));
         $access_token  = get_option('wpmudev_drive_access_token', '');
         $refresh_token = get_option('wpmudev_drive_refresh_token', '');
+
         $this->assertNotEmpty($access_token);
         $this->assertNotEmpty($refresh_token);
     }
 
     // ----------------------------
-    // Google Drive endpoint tests
+    // Google Drive Endpoint Tests
     // ----------------------------
     public function test_list_files() {
         $response = self::$api->route_list_files(new WP_REST_Request('GET', '/wpmudev/v1/drive/files'));
         $data = $response->get_data();
+
         $this->assertArrayHasKey('files', $data);
         $this->assertIsArray($data['files']);
         $this->assertEmpty($data['files']);
@@ -140,6 +163,7 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
     public function test_upload_file() {
         $response = self::$api->route_upload_file(new WP_REST_Request('POST', '/wpmudev/v1/drive/upload'));
         $data = $response->get_data();
+
         $this->assertArrayHasKey('file', $data);
         $this->assertEquals('mock_file', $data['file']['name']);
     }
@@ -147,6 +171,7 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
     public function test_create_folder() {
         $response = self::$api->route_create_folder(new WP_REST_Request('POST', '/wpmudev/v1/drive/create-folder'));
         $data = $response->get_data();
+
         $this->assertArrayHasKey('folder', $data);
         $this->assertEquals('mock_file', $data['folder']['name']);
     }
@@ -154,17 +179,16 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
     public function test_download_file() {
         $response = self::$api->route_download_file(new WP_REST_Request('GET', '/wpmudev/v1/drive/download'));
         $data = $response->get_data();
+
         $this->assertArrayHasKey('content', $data);
         $this->assertEquals(base64_encode('mock content'), $data['content']);
     }
 
-
-        // ----------------------------
-    // Edge-case tests
     // ----------------------------
-
+    // Edge-case / Error Handling Tests
+    // ----------------------------
     public function test_upload_invalid_file() {
-        // Simulate an upload error (no file provided)
+        // Simulate missing file upload
         $_FILES['file'] = [
             'name'     => '',
             'type'     => '',
@@ -179,26 +203,23 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
         $response = self::$api->route_upload_file($request);
         $data = $response->get_data();
 
-        // Assert that the response contains an error structure
         $this->assertArrayHasKey('file', $data);
         $this->assertEquals('mock_file', $data['file']['name'], 'Even invalid uploads should be handled gracefully in mocks.');
     }
 
     public function test_download_nonexistent_file() {
-        // Pass a bogus file_id
         $request = new WP_REST_Request('GET', '/wpmudev/v1/drive/download');
         $request->set_param('file_id', 'nonexistent_id');
 
         $response = self::$api->route_download_file($request);
         $data = $response->get_data();
 
-        // In mocks, we still return predictable data, but in production this should be an error
         $this->assertArrayHasKey('content', $data);
         $this->assertEquals(base64_encode('mock content'), $data['content']);
     }
 
     public function test_token_expiration_handling() {
-        // Override client to simulate expired token
+        // Override client to simulate token expiration
         self::$api->client = new class {
             public function createAuthUrl() { return 'https://mock.google.com/auth?client_id=test'; }
             public function isAccessTokenExpired() { return true; }
@@ -207,7 +228,6 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
             }
         };
 
-        // Simulate callback flow
         $request = new WP_REST_Request('GET', '/wpmudev/v1/drive/callback');
         $response = self::$api->route_auth_callback($request);
 
@@ -217,5 +237,4 @@ class TestAPIAuth extends WP_Test_REST_TestCase {
         $this->assertEquals('mock_auth', $access_token, 'Token should still be set in mocks.');
         $this->assertEquals('mock_refresh', $refresh_token, 'Refresh token should still be set in mocks.');
     }
-
 }

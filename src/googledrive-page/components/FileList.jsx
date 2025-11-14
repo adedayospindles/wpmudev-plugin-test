@@ -5,19 +5,27 @@ import { fetchJson } from "../utils/helpers";
 
 const apiBase = "/wp-json/";
 
+/**
+ * FileList component
+ * Displays Google Drive files, supports pagination, download, and deletion.
+ */
 const FileList = ({ showNotice, refreshTrigger }) => {
+	// State management
 	const [files, setFiles] = useState([]);
-	const [pageToken, setPageToken] = useState(""); // current token
-	const [nextPageToken, setNextPageToken] = useState(""); // token for next page
-	const [prevTokens, setPrevTokens] = useState([]); // stack of previous tokens
-	const [pageCache, setPageCache] = useState({}); // cache of pages
+	const [pageToken, setPageToken] = useState(""); // Current page token
+	const [nextPageToken, setNextPageToken] = useState(""); // Token for next page
+	const [prevTokens, setPrevTokens] = useState([]); // Stack of previous tokens
+	const [pageCache, setPageCache] = useState({}); // Cache for pages
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 	const [downloadingId, setDownloadingId] = useState(null);
 	const [deletingId, setDeletingId] = useState(null);
 	const [page, setPage] = useState(1);
 
+	/**
+	 * Load files from API or cache.
+	 */
 	const loadFiles = async (token = "", pageNum = 1) => {
-		// If cached, use it immediately
+		// Use cached page if available
 		if (pageCache[token]) {
 			setFiles(pageCache[token].files);
 			setNextPageToken(pageCache[token].nextPageToken || "");
@@ -27,6 +35,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 		}
 
 		setIsLoadingFiles(true);
+
 		try {
 			const res = await fetchJson(
 				apiBase +
@@ -40,16 +49,14 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 				setPageToken(token);
 				setPage(pageNum);
 
-				// Save to cache with a limit of 5 pages
+				// Save to cache (limit 5 pages)
 				setPageCache((prev) => {
 					const newCache = {
 						...prev,
 						[token]: { files: res.files, nextPageToken: res.nextPageToken },
 					};
 					const keys = Object.keys(newCache);
-					if (keys.length > 5) {
-						delete newCache[keys[0]]; // remove oldest token
-					}
+					if (keys.length > 5) delete newCache[keys[0]]; // remove oldest
 					return newCache;
 				});
 			} else {
@@ -66,13 +73,19 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 		}
 	};
 
+	/**
+	 * Pagination: Next page
+	 */
 	const handleNext = () => {
 		if (nextPageToken) {
-			setPrevTokens([...prevTokens, pageToken]); // save current token
+			setPrevTokens([...prevTokens, pageToken]); // Save current token
 			loadFiles(nextPageToken, page + 1);
 		}
 	};
 
+	/**
+	 * Pagination: Previous page
+	 */
 	const handlePrev = () => {
 		if (prevTokens.length > 0) {
 			const tokensCopy = [...prevTokens];
@@ -82,6 +95,9 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 		}
 	};
 
+	/**
+	 * Download a file
+	 */
 	const handleDownload = async (fileId, filename) => {
 		setDownloadingId(fileId);
 		try {
@@ -119,12 +135,17 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 		}
 	};
 
+	/**
+	 * Delete a file
+	 */
 	const handleDelete = async (fileId, filename) => {
 		if (
 			!window.confirm(`${__("Delete", "wpmudev-plugin-test")} "${filename}"?`)
 		)
 			return;
+
 		setDeletingId(fileId);
+
 		try {
 			const res = await fetchJson(
 				apiBase +
@@ -141,7 +162,6 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 				setPageCache({});
 				setPrevTokens([]);
 				setPage(1);
-				//loadFiles("", 1); reload first page
 				loadFiles(pageToken, page); // reload current page
 			} else throw new Error(res?.message || "Delete failed");
 		} catch (e) {
@@ -154,26 +174,27 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 		}
 	};
 
-	// Initial load
+	// Initial load on mount
 	useEffect(() => {
 		loadFiles("", 1);
 	}, []);
 
-	// Auto-refresh when `refreshTrigger` changes (used by UploadBox)
+	// Refresh files when `refreshTrigger` changes
 	useEffect(() => {
 		if (refreshTrigger) {
-			//const timer = setTimeout(() => {
-			setPageCache({}); // clear cache on refresh
+			setPageCache({});
 			setPrevTokens([]);
 			setPage(1);
 			loadFiles("", 1);
-			//}, 1500);
-			//return () => clearTimeout(timer);
 		}
 	}, [refreshTrigger]);
 
+	/**
+	 * Render
+	 */
 	return (
 		<div className="sui-box">
+			{/* Header */}
 			<div className="sui-box-header">
 				<h2 className="sui-box-title">
 					{__("Your Drive Files", "wpmudev-plugin-test")}
@@ -198,7 +219,9 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 				</div>
 			</div>
 
+			{/* Body */}
 			<div className="sui-box-body">
+				{/* Info notice */}
 				<Notice status="warning" isDismissible={false}>
 					{__(
 						"Only files created by this app can be deleted. Other files are read‑only due to Google Drive permissions.",
@@ -206,6 +229,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 					)}
 				</Notice>
 
+				{/* File grid or loading / empty state */}
 				{files.length ? (
 					<>
 						<div className="drive-files-grid">
@@ -221,6 +245,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 												: "—"}
 										</small>
 									</div>
+
 									<div className="file-actions">
 										{file.mimeType !== "application/vnd.google-apps.folder" && (
 											<Button
@@ -235,6 +260,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 												)}
 											</Button>
 										)}
+
 										<Button
 											variant="secondary"
 											isDestructive
@@ -255,6 +281,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 												__("Delete", "wpmudev-plugin-test")
 											)}
 										</Button>
+
 										{file.webViewLink && (
 											<Button
 												variant="link"
@@ -317,6 +344,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 				)}
 			</div>
 
+			{/* Loading overlay for pagination */}
 			{isLoadingFiles && files.length > 0 && (
 				<div className="drive-loading-more">
 					<Spinner />

@@ -6,12 +6,14 @@ import { fetchPostsByType } from "../utils/fetchPostsByType";
 const POSTS_PER_PAGE = 10;
 
 const PostList = ({ selectedType, onSelect }) => {
+	/* ---------------- State Hooks ---------------- */
 	const [availablePosts, setAvailablePosts] = useState([]);
 	const [selectedPosts, setSelectedPosts] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 
+	/* ---------------- Fetch posts when type changes ---------------- */
 	useEffect(() => {
 		if (!selectedType) return;
 
@@ -37,16 +39,17 @@ const PostList = ({ selectedType, onSelect }) => {
 		fetchPosts();
 	}, [selectedType]);
 
+	/* ---------------- Filter and paginate posts ---------------- */
 	const filteredPosts = availablePosts.filter((post) =>
 		post.title.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-
 	const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
 	const paginatedPosts = filteredPosts.slice(
 		(currentPage - 1) * POSTS_PER_PAGE,
 		currentPage * POSTS_PER_PAGE
 	);
 
+	/* ---------------- Handle checkbox selection ---------------- */
 	const handleCheckboxChange = (id) => {
 		const updated = selectedPosts.includes(id)
 			? selectedPosts.filter((pid) => pid !== id)
@@ -68,12 +71,15 @@ const PostList = ({ selectedType, onSelect }) => {
 		onSelect(updated);
 	};
 
+	/* ---------------- Early return if no type selected ---------------- */
 	if (!selectedType) return null;
 
+	/* ---------------- Render ---------------- */
 	return (
 		<div className="pm-post-list">
 			<h4>{__("Select posts to scan:", "wpmudev-plugin-test")}</h4>
 
+			{/* Search input */}
 			<input
 				type="search"
 				placeholder={__("Search posts...", "wpmudev-plugin-test")}
@@ -82,10 +88,12 @@ const PostList = ({ selectedType, onSelect }) => {
 				style={{ marginBottom: "10px", width: "100%" }}
 			/>
 
+			{/* Loading spinner */}
 			{isLoading ? (
 				<Spinner />
 			) : filteredPosts.length > 0 ? (
 				<>
+					{/* Select all checkbox for current page */}
 					<div style={{ marginBottom: "10px" }}>
 						<label>
 							<input
@@ -100,6 +108,7 @@ const PostList = ({ selectedType, onSelect }) => {
 						</label>
 					</div>
 
+					{/* Post list */}
 					<ul>
 						{paginatedPosts.map((post) => (
 							<li key={post.id}>
@@ -116,6 +125,7 @@ const PostList = ({ selectedType, onSelect }) => {
 						))}
 					</ul>
 
+					{/* Pagination controls */}
 					<div style={{ marginTop: "10px" }}>
 						<Button
 							isSecondary

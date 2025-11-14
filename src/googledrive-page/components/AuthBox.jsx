@@ -5,7 +5,16 @@ import { fetchJson } from "../utils/helpers";
 
 const apiBase = "/wp-json/";
 
+/**
+ * AuthBox component for managing Google Drive authentication.
+ * - Handles saving credentials (Client ID / Secret)
+ * - Initiates OAuth flow
+ * - Shows notices for success or error
+ */
 const AuthBox = ({ showNotice, setHasCredentials }) => {
+	// ----------------------------
+	// Component state
+	// ----------------------------
 	const [credentials, setCredentials] = useState({
 		clientId: "",
 		clientSecret: "",
@@ -18,11 +27,18 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 	);
 	const [isLoading, setIsLoading] = useState(false);
 
+	// ----------------------------
+	// Initialize credentials from global config
+	// ----------------------------
 	useEffect(() => {
-		if (window.wpmudevDriveTest.credentials)
+		if (window.wpmudevDriveTest.credentials) {
 			setCredentials(window.wpmudevDriveTest.credentials);
+		}
 	}, []);
 
+	// ----------------------------
+	// Save credentials to server
+	// ----------------------------
 	const handleSaveCredentials = async () => {
 		setIsLoading(true);
 		try {
@@ -30,6 +46,7 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 				client_id: credentials.clientId,
 				client_secret: credentials.clientSecret,
 			};
+
 			const res = await fetchJson(
 				apiBase + window.wpmudevDriveTest.restEndpointSave,
 				{
@@ -49,7 +66,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 					),
 					"success"
 				);
-			} else throw new Error(res.message || "Unknown error");
+			} else {
+				throw new Error(res.message || "Unknown error");
+			}
 		} catch (e) {
 			showNotice(
 				`${__("Failed to save credentials:", "wpmudev-plugin-test")} ${
@@ -62,6 +81,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 		}
 	};
 
+	// ----------------------------
+	// Trigger Google OAuth authentication
+	// ----------------------------
 	const handleAuth = async () => {
 		setIsLoading(true);
 		try {
@@ -69,6 +91,7 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 				apiBase + window.wpmudevDriveTest.restEndpointAuth,
 				{ method: "POST" }
 			);
+
 			if (res?.auth_url) {
 				window.location.href = res.auth_url;
 				return;
@@ -84,6 +107,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 		}
 	};
 
+	// ----------------------------
+	// Render: Credentials Input Form
+	// ----------------------------
 	if (showCredentials) {
 		return (
 			<div className="sui-box">
@@ -92,8 +118,12 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 						{__("Set Google Drive Credentials", "wpmudev-plugin-test")}
 					</h2>
 				</div>
+
 				<div className="sui-box-body">
 					<TextControl
+						label={__("Client ID", "wpmudev-plugin-test")}
+						value={credentials.clientId}
+						onChange={(v) => setCredentials({ ...credentials, clientId: v })}
 						help={createInterpolateElement(
 							__(
 								"You can get Client ID from <a>Google Cloud Console</a>. Make sure to enable Google Drive API.",
@@ -109,11 +139,15 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 								),
 							}
 						)}
-						label={__("Client ID", "wpmudev-plugin-test")}
-						value={credentials.clientId}
-						onChange={(v) => setCredentials({ ...credentials, clientId: v })}
 					/>
+
 					<TextControl
+						label={__("Client Secret", "wpmudev-plugin-test")}
+						type="password"
+						value={credentials.clientSecret}
+						onChange={(v) =>
+							setCredentials({ ...credentials, clientSecret: v })
+						}
 						help={createInterpolateElement(
 							__(
 								"You can get Client Secret from <a>Google Cloud Console</a>.",
@@ -129,13 +163,8 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 								),
 							}
 						)}
-						label={__("Client Secret", "wpmudev-plugin-test")}
-						value={credentials.clientSecret}
-						onChange={(v) =>
-							setCredentials({ ...credentials, clientSecret: v })
-						}
-						type="password"
 					/>
+
 					<p>
 						<strong>
 							{__(
@@ -149,6 +178,7 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 						<li>https://www.googleapis.com/auth/drive.readonly</li>
 					</ul>
 				</div>
+
 				<div className="sui-box-footer">
 					<div className="sui-actions-right">
 						<Button
@@ -168,6 +198,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 		);
 	}
 
+	// ----------------------------
+	// Render: Authentication Button
+	// ----------------------------
 	if (!isAuthenticated) {
 		return (
 			<div className="sui-box">
@@ -176,6 +209,7 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 						{__("Authenticate with Google Drive", "wpmudev-plugin-test")}
 					</h2>
 				</div>
+
 				<div className="sui-box-body">
 					<p>
 						{__(
@@ -184,6 +218,7 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 						)}
 					</p>
 				</div>
+
 				<div className="sui-box-footer">
 					<div className="sui-actions-left">
 						<Button
@@ -207,7 +242,10 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 		);
 	}
 
-	return null; // nothing to render if authenticated
+	// ----------------------------
+	// Nothing to render if already authenticated
+	// ----------------------------
+	return null;
 };
 
 export default AuthBox;

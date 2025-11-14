@@ -1,6 +1,10 @@
 module.exports = function (grunt) {
+	// Automatically load all grunt tasks
 	require("load-grunt-tasks")(grunt);
 
+	// -------------------------------------------------------------------------
+	// File definitions for copying
+	// -------------------------------------------------------------------------
 	const copyFiles = [
 		"app/**",
 		"core/**",
@@ -41,24 +45,35 @@ module.exports = function (grunt) {
 		"!tests/**", // Exclude unit tests
 	];
 
+	// Special copy array for Pro builds (remove changelog)
 	const excludeCopyFilesPro = copyFiles.slice(0).concat(["changelog.txt"]);
 
+	// -------------------------------------------------------------------------
 	// Load changelog safely
+	// -------------------------------------------------------------------------
 	let changelog = "";
 	if (grunt.file.exists(".changelog")) {
 		changelog = grunt.file.read(".changelog");
 	}
 
+	// -------------------------------------------------------------------------
+	// Grunt configuration
+	// -------------------------------------------------------------------------
 	grunt.initConfig({
 		pkg: grunt.file.readJSON("package.json"),
 
-		// Clean temp folders and release copies
+		// -----------------------------
+		// Cleaning tasks
+		// -----------------------------
 		clean: {
 			temp: ["**/*.tmp", "**/.afpDeleted*", "**/.DS_Store"],
 			assets: ["assets/css/**", "assets/js/**"],
 			folder_v2: ["build/**"],
 		},
 
+		// -----------------------------
+		// Check text domain for i18n
+		// -----------------------------
 		checktextdomain: {
 			options: {
 				text_domain: "wpmudev-plugin-test",
@@ -90,6 +105,9 @@ module.exports = function (grunt) {
 			},
 		},
 
+		// -----------------------------
+		// Copy plugin files to build folder
+		// -----------------------------
 		copy: {
 			pro: {
 				files: [
@@ -108,6 +126,9 @@ module.exports = function (grunt) {
 			},
 		},
 
+		// -----------------------------
+		// Compress build folder into ZIP
+		// -----------------------------
 		compress: {
 			pro: {
 				options: {
@@ -122,10 +143,19 @@ module.exports = function (grunt) {
 		},
 	});
 
+	// -------------------------------------------------------------------------
+	// Load extra grunt tasks
+	// -------------------------------------------------------------------------
 	grunt.loadNpmTasks("grunt-search");
 
+	// -------------------------------------------------------------------------
+	// Custom tasks
+	// -------------------------------------------------------------------------
+
+	// Search for version changes
 	grunt.registerTask("version-compare", ["search"]);
 
+	// Finalize build
 	grunt.registerTask("finish", function () {
 		const json = grunt.file.readJSON("package.json");
 		const file = "./build/" + json.name + "-" + json.version + ".zip";
@@ -133,10 +163,14 @@ module.exports = function (grunt) {
 		grunt.log.writeln("Built plugin file: " + file);
 	});
 
-	// Build task
+	// -----------------------------
+	// Combined build task
+	// -----------------------------
 	grunt.registerTask("build", ["checktextdomain", "copy:pro", "compress:pro"]);
 
-	// Pre-build cleanup
+	// -----------------------------
+	// Pre-build cleanup task
+	// -----------------------------
 	grunt.registerTask("preBuildClean", [
 		"clean:temp",
 		"clean:assets",

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class TestDependencyManager
+ * Unit tests for Dependency_Manager functionality
  *
  * @package WPMUDEV_Plugin_Test
  */
@@ -8,12 +8,17 @@
 use WPMUDEV\PluginTest\Core\Dependency_Manager;
 
 /**
- * Dependency Manager test case.
+ * Class TestDependencyManager
+ *
+ * Contains unit tests for the Dependency_Manager class.
  */
 class TestDependencyManager extends WP_UnitTestCase {
 
+    // -------------------------------------------------------------------------
+    // Test: Class existence
+    // -------------------------------------------------------------------------
     /**
-     * Ensure the Dependency_Manager class exists and loads correctly.
+     * Ensure the Dependency_Manager class exists.
      */
     public function test_class_exists() {
         $this->assertTrue(
@@ -22,8 +27,11 @@ class TestDependencyManager extends WP_UnitTestCase {
         );
     }
 
+    // -------------------------------------------------------------------------
+    // Test: Initialization
+    // -------------------------------------------------------------------------
     /**
-     * Ensure Dependency_Manager::init() can be called without error.
+     * Ensure Dependency_Manager::init() can be called without throwing errors.
      */
     public function test_init_does_not_throw_errors() {
         try {
@@ -34,8 +42,11 @@ class TestDependencyManager extends WP_UnitTestCase {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Test: Method existence
+    // -------------------------------------------------------------------------
     /**
-     * Ensure the check_environment() method exists.
+     * Ensure the check_environment() method exists in Dependency_Manager.
      */
     public function test_check_environment_method_exists() {
         $this->assertTrue(
@@ -44,14 +55,20 @@ class TestDependencyManager extends WP_UnitTestCase {
         );
     }
 
+    // -------------------------------------------------------------------------
+    // Test: Method behavior
+    // -------------------------------------------------------------------------
     /**
-     * Optionally test check_environment() behavior if it returns a value.
+     * Optionally test check_environment() behavior if implemented.
      */
     public function test_check_environment_returns_expected_type() {
         if (method_exists(Dependency_Manager::class, 'check_environment')) {
             $result = Dependency_Manager::check_environment();
+
+            // Expecting an array from check_environment
             $this->assertIsArray($result, 'check_environment should return an array.');
         } else {
+            // Skip test if method is not implemented
             $this->markTestSkipped('check_environment method not implemented yet.');
         }
     }

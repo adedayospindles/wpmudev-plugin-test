@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests for Posts Maintenance functionality
+ * Unit tests for Posts Maintenance functionality.
  *
  * @package WPMUDEV\PluginTest\Tests
  */
@@ -9,12 +9,22 @@ use WPMUDEV\PluginTest\Admin\Posts_Maintenance;
 
 defined('ABSPATH') || exit;
 
+/**
+ * Class TestPostsMaintenance
+ *
+ * Contains unit tests for the Posts_Maintenance class.
+ */
 class TestPostsMaintenance extends WP_UnitTestCase {
 
+    /**
+     * Static array to hold created post IDs for testing.
+     *
+     * @var array
+     */
     protected static $post_ids = [];
 
     /**
-     * Setup test posts before each test
+     * Setup test posts before each test.
      */
     public function setUp(): void {
         parent::setUp();
@@ -26,14 +36,14 @@ class TestPostsMaintenance extends WP_UnitTestCase {
             'custom' => [],
         ];
 
-        // Ensure post types exist
+        // Ensure required post types exist
         foreach (['post', 'page', 'custom'] as $type) {
             if (!post_type_exists($type)) {
                 register_post_type($type, ['public' => true]);
             }
         }
 
-        // Create published posts
+        // Create published posts for testing
         foreach (range(1, 5) as $_) {
             self::$post_ids['post'][] = $this->factory->post->create([
                 'post_type'   => 'post',
@@ -57,20 +67,23 @@ class TestPostsMaintenance extends WP_UnitTestCase {
     }
 
     /**
-     * Test that scheduled_scan updates post meta
+     * Test that scheduled_scan updates post meta for all post types.
      */
     public function test_scan_posts_updates_meta() {
         $scanner = new Posts_Maintenance();
         $ref = new \ReflectionMethod($scanner, 'scheduled_scan');
         $ref->setAccessible(true);
 
+        // Invoke scan on all post types
         $ref->invokeArgs($scanner, [['post', 'page', 'custom']]);
         wp_cache_flush();
 
+        // Check meta for all post types
         foreach (['post', 'page', 'custom'] as $type) {
             foreach (self::$post_ids[$type] as $post_id) {
                 wp_cache_delete($post_id, 'post_meta');
                 $meta = get_post_meta($post_id, 'wpmudev_test_last_scan', true);
+
                 $this->assertNotEmpty($meta, "Post meta for {$post_id} should not be empty");
                 $this->assertGreaterThan(0, intval($meta), "Post meta should be a valid timestamp");
             }
@@ -78,27 +91,31 @@ class TestPostsMaintenance extends WP_UnitTestCase {
     }
 
     /**
-     * Test scan with default post types
+     * Test that scan defaults to 'post' and 'page' when no post types are provided.
      */
     public function test_scan_with_no_post_types_defaults_to_post_and_page() {
         $scanner = new Posts_Maintenance();
         $ref = new \ReflectionMethod($scanner, 'scheduled_scan');
         $ref->setAccessible(true);
 
+        // Invoke scan with no arguments (default types)
         $ref->invoke($scanner);
         wp_cache_flush();
 
+        // Verify meta for default post types
         foreach (array_merge(self::$post_ids['post'], self::$post_ids['page']) as $post_id) {
             wp_cache_delete($post_id, 'post_meta');
             $meta = get_post_meta($post_id, 'wpmudev_test_last_scan', true);
+
             $this->assertNotEmpty($meta, "Meta should not be empty for post ID {$post_id}");
         }
     }
 
     /**
-     * Test that non-published posts are skipped
+     * Test that non-published posts are skipped during scan.
      */
     public function test_scan_skips_non_published_posts() {
+        // Create a draft post
         $draft_id = $this->factory->post->create([
             'post_type'   => 'post',
             'post_status' => 'draft',
@@ -108,16 +125,18 @@ class TestPostsMaintenance extends WP_UnitTestCase {
         $ref = new \ReflectionMethod($scanner, 'scheduled_scan');
         $ref->setAccessible(true);
 
+        // Run scan
         $ref->invoke($scanner);
         wp_cache_flush();
 
+        // Ensure draft post has no meta updated
         wp_cache_delete($draft_id, 'post_meta');
         $meta = get_post_meta($draft_id, 'wpmudev_test_last_scan', true);
         $this->assertEmpty($meta, "Draft posts should not be scanned or have meta updated");
     }
 
     /**
-     * Test scan is repeatable
+     * Test that scan is repeatable and updates timestamps on subsequent runs.
      */
     public function test_scan_is_repeatable() {
         $scanner = new Posts_Maintenance();
@@ -134,16 +153,22 @@ class TestPostsMaintenance extends WP_UnitTestCase {
             $first_scan[$post_id] = get_post_meta($post_id, 'wpmudev_test_last_scan', true);
         }
 
-        sleep(2); // Ensure timestamp difference
+        // Wait to ensure timestamp difference
+        sleep(2);
 
         // Second scan
         $ref->invokeArgs($scanner, [['post', 'page', 'custom']]);
         wp_cache_flush();
 
+        // Validate that second scan updates timestamps
         foreach (self::$post_ids['post'] as $post_id) {
             wp_cache_delete($post_id, 'post_meta');
             $second_scan = get_post_meta($post_id, 'wpmudev_test_last_scan', true);
-            $this->assertGreaterThan($first_scan[$post_id], $second_scan, "Second scan should update meta timestamp for post ID {$post_id}");
+            $this->assertGreaterThan(
+                $first_scan[$post_id],
+                $second_scan,
+                "Second scan should update meta timestamp for post ID {$post_id}"
+            );
         }
     }
 }
