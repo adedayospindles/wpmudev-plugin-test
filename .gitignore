@@ -31,11 +31,6 @@ npm-debug.log
 .git/
 .github/
 
-# Package
-
-package-lock.json
-composer.lock
-
 
 # Tests
 #/tests/
