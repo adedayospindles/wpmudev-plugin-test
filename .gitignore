@@ -31,12 +31,25 @@ npm-debug.log
 .git/
 .github/
 
+# Package
+
+package-lock.json
+composer.lock
+
+
 # Tests
 #/tests/
 #/phpunit.xml.dist
+/bin
+.phpunit.result.cache
 
 # OS files
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+
+
+# Others
+
+QUESTIONS.md
