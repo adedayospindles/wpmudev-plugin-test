@@ -1,0 +1,48 @@
+# For official WP.org SVN build repository
+
+# Node / NPM
+
+/node_modules/
+/npm-debug.log
+/package.json
+/package-lock.json
+
+# Composer
+
+/composer.json
+/composer.lock
+/vendor/bin
+
+# Source files
+
+/src/
+
+# Build tools / configs
+
+/webpack.config.js
+/.babelrc
+/.eslintrc
+/.editorconfig
+
+# Git & CI
+
+/.git/
+/.github/
+/.gitignore
+/.gitattributes
+
+# Tests
+
+/tests/
+/phpunit.xml
+
+# Documentation
+
+/README.md # WP.org requires readme.txt instead
+
+# OS / IDE files
+
+/.DS_Store
+/Thumbs.db
+/.idea/
+/.vscode/

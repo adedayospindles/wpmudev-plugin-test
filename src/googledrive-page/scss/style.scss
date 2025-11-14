@@ -1,0 +1,376 @@
+// --------------------- Font & Image Paths ---------------------
+$sui-font-path: "~@wpmudev/shared-ui/dist/fonts/";
+$sui-image-path: "~@wpmudev/shared-ui/dist/images/";
+
+// Import WPMUDEV shared UI
+@import "@wpmudev/shared-ui";
+
+// --------------------- General SUI Box Adjustments ---------------------
+.sui-box-body {
+	.components-base-control {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		input[type="text"],
+		input[type="url"],
+		input[type="email"],
+		select {
+			width: 100%;
+			border: 1px solid #ccc;
+			padding: 8px 10px;
+			font-size: 14px;
+			font-family: Arial, sans-serif;
+			line-height: 1.4;
+			transition: border-color 0.2s ease;
+
+			&:focus {
+				border-color: #0073aa;
+				outline: none;
+			}
+		}
+
+		label {
+			font-weight: 600;
+			font-size: 13px;
+			margin-bottom: 4px;
+		}
+	}
+}
+
+// --------------------- Google Drive Input ---------------------
+.drive-file-input {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 48px;
+	padding: 12px !important;
+	border: 2px dashed #c3c4c7;
+	background: #f6f7f7;
+	cursor: pointer;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	text-align: center;
+	transition:
+		border-color 0.2s ease,
+		background 0.2s ease;
+
+	&:hover,
+	&:focus {
+		border-color: #0073aa;
+		background: #f0f6fc;
+		outline: none;
+	}
+}
+
+// --------------------- Loading State ---------------------
+.drive-loading,
+.drive-loading-more {
+	text-align: center;
+	padding: 20px 15px;
+	margin-top: 12px;
+
+	.components-spinner {
+		margin: 0 auto 8px;
+	}
+
+	p {
+		color: #666;
+		font-size: 14px;
+		margin: 0;
+	}
+}
+
+// --------------------- Files Grid ---------------------
+.drive-files-grid {
+	display: grid;
+	gap: 16px;
+	align-items: stretch;
+	box-sizing: border-box;
+	padding: 0 20px;
+	max-width: 100%;
+	margin: 0 auto;
+
+	// Mobile-first responsive grid
+	grid-template-columns: 1fr;
+
+	@media (min-width: 600px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	@media (min-width: 900px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	@media (min-width: 1200px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.drive-file-item {
+		border: 1px solid #eee;
+		border-radius: 6px;
+		padding: 12px;
+		background: #fafafa;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		transition: box-shadow 0.2s;
+		overflow-wrap: anywhere;
+
+		&:hover {
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.file-info {
+			margin-bottom: 8px;
+
+			strong {
+				display: block;
+				margin-bottom: 4px;
+				font-size: 13px;
+				font-weight: 600;
+				color: #1e1e1e;
+			}
+
+			small {
+				color: #666;
+				font-size: 12px;
+			}
+		}
+
+		.file-actions {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-top: auto;
+		}
+	}
+}
+
+// --------------------- Description ---------------------
+.sui-description {
+	font-size: 13px;
+	color: #757575;
+	margin-bottom: 20px;
+}
+
+// --------------------- Notices ---------------------
+.components-notice {
+	margin: 15px 0;
+
+	&.is-success {
+		border-left-color: #00a32a;
+	}
+	&.is-error {
+		border-left-color: #d63638;
+	}
+}
+
+// --------------------- Responsive ---------------------
+@media (max-width: 768px) {
+	.drive-file-item {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+
+		.file-actions {
+			align-self: stretch;
+			justify-content: flex-end;
+		}
+	}
+
+	.sui-box-header .sui-actions-right {
+		margin-top: 10px;
+	}
+}
+
+// --------------------- Pagination Controls ---------------------
+.drive-pagination {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 16px;
+
+	.components-button {
+		font-size: 12px;
+		height: 32px;
+		padding: 0 12px;
+		border-radius: 0;
+		box-shadow: none;
+
+		&.is-secondary {
+			background: #f1f1f1;
+			color: #333;
+
+			&:hover {
+				filter: brightness(0.95);
+			}
+		}
+
+		&.is-primary {
+			background: #0073aa;
+			color: #fff;
+
+			&:hover {
+				filter: brightness(0.95);
+			}
+		}
+	}
+
+	.drive-pagination-page {
+		font-size: 13px;
+		color: #555;
+	}
+}
+
+// --------------------- Unified Button Styles ---------------------
+.drive-files-grid .components-button,
+.sui-actions-right .components-button,
+.sui-box-settings-row .components-button,
+.drive-pagination .components-button {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	height: 32px;
+	padding: 5px;
+	line-height: 1.2;
+	border-radius: 0;
+	box-shadow: none;
+	transition:
+		background 0.2s ease,
+		filter 0.2s ease;
+
+	&.is-secondary {
+		background: #f1f1f1;
+		color: #333;
+
+		&:hover {
+			filter: brightness(0.95);
+		}
+	}
+
+	&.is-primary {
+		background: #0073aa;
+		color: #fff;
+
+		&:hover {
+			filter: brightness(0.95);
+		}
+	}
+
+	&.is-link {
+		background: none;
+		color: #0073aa;
+		text-decoration: underline;
+
+		&:hover {
+			filter: brightness(0.95);
+		}
+	}
+}
+
+// --------------------- Upload Box ---------------------
+.drive-drop-zone {
+	border: 2px dashed #ccc;
+	border-radius: 5px;
+	padding: 20px;
+	cursor: pointer;
+	transition:
+		background-color 0.3s,
+		border-color 0.3s;
+
+	&.drag-over {
+		background-color: #f0f8ff;
+		border-color: #0073aa;
+	}
+
+	p {
+		margin-bottom: 10px;
+		font-size: 14px;
+		color: #555;
+	}
+}
+
+.upload-file-list {
+	margin-top: 10px;
+
+	.upload-file-row {
+		margin-bottom: 8px;
+		padding: 6px 0;
+		border-bottom: 1px solid #eee;
+
+		strong {
+			display: block;
+			margin-bottom: 4px;
+		}
+
+		.upload-error {
+			color: #d63638;
+			font-size: 12px;
+			margin-top: 4px;
+		}
+	}
+}
+
+// --------------------- Toggle ---------------------
+.components-toggle-control {
+	margin-top: 10px;
+
+	label {
+		font-weight: 600;
+		color: #333;
+	}
+
+	.components-base-control__help {
+		font-size: 12px;
+		color: #666;
+	}
+}
+
+.upload-mode-badge {
+	display: inline-block;
+	margin-left: 12px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+
+	&.sequential {
+		background-color: #f0f8ff;
+		color: #0073aa;
+	}
+	&.parallel {
+		background-color: #e6ffe6;
+		color: #22863a;
+	}
+}
+
+// --------------------- File Actions ---------------------
+.file-actions .components-button.is-destructive {
+	background-color: #d63638;
+	color: #fff;
+
+	&:hover {
+		background-color: #b32d2e;
+	}
+}
+
+.file-actions .sui-button[disabled] {
+	opacity: 0.6;
+	cursor: not-allowed;
+
+	&::after {
+		content: " 🔒";
+	}
+}
+
+// --------------------- Delete Notice ---------------------
+.delete-limit-notice {
+	background: #fff3cd;
+	border: 1px solid #ffeeba;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+	color: #856404;
+	font-size: 14px;
+}

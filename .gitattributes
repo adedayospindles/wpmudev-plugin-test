@@ -1,0 +1,40 @@
+# Node / NPM
+node_modules export-ignore
+npm-debug.log export-ignore
+
+# Keep package.json and package-lock.json in repo for reproducibility,
+# but exclude them from release ZIP
+package.json export-ignore
+package-lock.json export-ignore
+
+# Composer
+# Keep composer.json and composer.lock in repo, exclude from release ZIP
+composer.json export-ignore
+composer.lock export-ignore
+vendor/bin export-ignore
+
+# Source files (React/JSX)
+src export-ignore
+
+# Build tools / configs
+# Keep in repo for development, exclude from release ZIP
+webpack.config.js export-ignore
+.babelrc export-ignore
+.eslintrc export-ignore
+.editorconfig export-ignore
+
+# Git & CI
+.git export-ignore
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+
+# Tests
+tests export-ignore
+phpunit.xml export-ignore
+
+# OS / IDE files
+.DS_Store export-ignore
+Thumbs.db export-ignore
+.idea export-ignore
+.vscode export-ignore

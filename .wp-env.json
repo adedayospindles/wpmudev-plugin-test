@@ -1,0 +1,9 @@
+{
+	"phpVersion": "8.2",
+	"core": "wordpress/wordpress",
+	"plugins": ["."],
+	"themes": [],
+	"config": {
+		"WP_DEBUG": true
+	}
+}

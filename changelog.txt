@@ -1,0 +1,20 @@
+=== Version 1.0.0 — 2025-11-13 00:53:10 UTC ===
+Added:
+- Initial release of WPMU DEV Plugin Test.
+- Google Drive admin interface with credential management, OAuth 2.0 authentication, and file operations (upload, download, delete, create folder).
+- Posts Maintenance admin page with post scanning, daily scheduled tasks, and background processing.
+- WP-CLI command `wp wpmudev scan-posts` for post maintenance operations.
+- REST API endpoints for credentials, authentication, and Google Drive file operations.
+- Unit tests for Posts Maintenance functionality.
+
+Fixed:
+- Corrected asset URL constant to remove trailing slash before "assets".
+- Addressed minor issues with nonce validation in REST requests.
+
+Changed:
+- Standardized internationalization across React components using WordPress i18n functions.
+- Improved error handling and user feedback in file upload and delete operations.
+
+Removed:
+- Unnecessary vendor test packages from Composer autoload.
+- Source maps from committed assets to reduce package size.

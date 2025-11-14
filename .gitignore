@@ -1,0 +1,42 @@
+# Node / NPM
+node_modules/
+npm-debug.log
+
+# Composer
+/vendor/
+/vendor/bin/
+/vendor/phpunit/
+/vendor/squizlabs/
+/vendor/**/*Test*/
+
+# Keep composer.lock committed for reproducibility
+# composer.lock
+
+# Source files (React/JSX)
+#src/
+
+# Build / Assets
+/assets/css/*.map
+/assets/js/*.map
+/build/
+
+# Config / Dev files
+/.babelrc
+/.eslintrc
+.editorconfig
+# Keep webpack.config.js committed
+# Keep package-lock.json committed
+
+# Git / CI
+.git/
+.github/
+
+# Tests
+#/tests/
+#/phpunit.xml.dist
+
+# OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

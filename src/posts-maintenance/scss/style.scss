@@ -1,0 +1,156 @@
+/* src/posts-maintenance/scss/style.scss
+ * Clean & minimal color-enhanced style for Posts Maintenance admin UI
+ */
+
+/* ---------------- Color Palette ---------------- */
+$primary-color: #0073aa; // WordPress blue
+$primary-hover: #005177;
+$bg-light: #fafafa;
+$bg-lighter: #f5f5f5;
+$border-color: #ddd;
+$text-color: #333;
+$disabled-color: #ccc;
+
+/* ---------------- General Page ---------------- */
+.pm-post-maintenance,
+.pm-post-list,
+.pm-scan-history {
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	color: $text-color;
+	margin-bottom: 2em;
+}
+
+.pm-post-list h4,
+.pm-scan-history h4 {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
+/* ---------------- Inputs & Selects ---------------- */
+.pm-select,
+.pm-post-list input[type="search"],
+.pm-scan-history select {
+	font-family: inherit;
+	font-size: 14px;
+	padding: 6px 10px;
+	border: 1px solid $border-color;
+	outline: none;
+	width: 100%;
+	box-sizing: border-box;
+	margin-bottom: 0.75em;
+	border-radius: 0;
+	background-color: #fff;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.pm-select:focus,
+.pm-post-list input[type="search"]:focus,
+.pm-scan-history select:focus {
+	border-color: $primary-color;
+	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+}
+
+.pm-select option {
+	padding: 4px 6px;
+	background-color: #fff;
+}
+
+/* ---------------- Buttons ---------------- */
+.sui-box-footer button,
+.pm-post-list button,
+.postmaintenance-pagination .components-button {
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 8px 14px;
+	border: none;
+	background-color: $primary-color;
+	color: #fff;
+	cursor: pointer;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	border-radius: 0;
+	box-shadow: none;
+	transition:
+		background-color 0.2s ease,
+		transform 0.1s ease;
+}
+
+.sui-box-footer button:hover,
+.pm-post-list button:hover,
+.postmaintenance-pagination .components-button:hover {
+	background-color: $primary-hover;
+}
+
+button:disabled {
+	background-color: $disabled-color;
+	cursor: not-allowed;
+}
+
+/* ---------------- Table for Scan History ---------------- */
+.pm-history-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 1em;
+	font-size: 13px;
+	background-color: #fff;
+}
+
+.pm-history-table th,
+.pm-history-table td {
+	border: 1px solid $border-color;
+	padding: 6px 10px;
+	text-align: left;
+}
+
+.pm-history-table th {
+	background-color: $bg-lighter;
+	font-weight: 600;
+}
+
+.pm-history-table tbody tr:nth-child(even) {
+	background-color: $bg-light;
+}
+
+/* ---------------- Checkbox list ---------------- */
+.pm-post-list ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.pm-post-list li {
+	padding: 4px 0;
+	display: flex;
+	align-items: center;
+}
+
+.pm-post-list input[type="checkbox"] {
+	margin-right: 8px;
+	accent-color: $primary-color;
+}
+
+/* ---------------- Notices ---------------- */
+.sui-notice {
+	border-radius: 0;
+	font-size: 14px;
+}
+
+/* ---------------- Footer spacing ---------------- */
+.sui-box-footer {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 1.5em;
+	gap: 0.5em;
+}
+
+/* ---------------- Page box spacing ---------------- */
+.sui-box {
+	margin-top: 20px;
+	padding: 1.5em;
+	border: 1px solid $border-color;
+	background-color: #fff;
+}
