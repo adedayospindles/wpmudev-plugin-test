@@ -137,6 +137,10 @@ Run with:
 phpunit
 ```
 
+**Integration Testing**
+
+Tests implemented for Googledrive Api Auth.
+
 **Coding Task Coverage**
 
 This plugin addresses all coding tasks outlined:
