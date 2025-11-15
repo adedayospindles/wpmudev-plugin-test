@@ -14,6 +14,7 @@ const DriveApp = () => {
 	const [hasCredentials, setHasCredentials] = useState(
 		Boolean(window.wpmudevDriveTest.hasCredentials)
 	);
+	const [refreshTrigger, setRefreshTrigger] = useState(0); // shared trigger for FileList reload
 
 	// ----------------------------
 	// Helper Functions
@@ -26,6 +27,13 @@ const DriveApp = () => {
 	const showNotice = (message, status = "success") => {
 		setNotice({ message, status });
 		setTimeout(() => setNotice(null), 7000); // Auto-dismiss after 7s
+	};
+
+	/**
+	 * Trigger a refresh of the FileList
+	 */
+	const triggerRefresh = () => {
+		setRefreshTrigger((prev) => prev + 1);
 	};
 
 	// ----------------------------
@@ -53,17 +61,14 @@ const DriveApp = () => {
 					{/* Upload File Box */}
 					<UploadBox
 						showNotice={showNotice}
-						loadFiles={() => document.dispatchEvent(new Event("loadFiles"))}
+						onUploadComplete={triggerRefresh}
 					/>
 
 					{/* Create Folder Box */}
-					<FolderBox
-						showNotice={showNotice}
-						loadFiles={() => document.dispatchEvent(new Event("loadFiles"))}
-					/>
+					<FolderBox showNotice={showNotice} onFolderCreated={triggerRefresh} />
 
 					{/* File List */}
-					<FileList showNotice={showNotice} />
+					<FileList showNotice={showNotice} refreshTrigger={refreshTrigger} />
 				</>
 			)}
 		</ErrorBoundary>

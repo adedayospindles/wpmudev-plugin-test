@@ -353,7 +353,6 @@ class Drive_API extends Base {
                 'Google OAuth credentials not configured',
                 ['status' => 400]
             );
-
             $this->log_error($error, 'start_auth');
             return $error;
         }
@@ -366,7 +365,6 @@ class Drive_API extends Base {
                 'You must be logged in to authenticate with Google.',
                 ['status' => 403]
             );
-
             $this->log_error($error, 'start_auth');
             return $error;
         }
@@ -374,10 +372,14 @@ class Drive_API extends Base {
         // Generate CSRF-safe UUID
         $uuid = wp_generate_uuid4();
 
-        // Encode UUID + user ID in state
+        // Capture the page user started from (fallback to plugin settings page)
+        $return_to = esc_url_raw( wp_get_referer() ?: admin_url('admin.php?page=wpmudev-drive') );
+
+        // Encode UUID + user ID + return URL in state
         $payload = json_encode([
-            'uuid'    => $uuid,
-            'user_id' => $current_user_id,
+            'uuid'      => $uuid,
+            'user_id'   => $current_user_id,
+            'return_to' => $return_to,
         ]);
 
         $encoded_state = base64_encode($payload);
@@ -414,108 +416,48 @@ class Drive_API extends Base {
      * Handles the OAuth callback from Google and exchanges the code for access tokens.
      *
      * @param WP_REST_Request $request
-     * @return WP_REST_Response|WP_Error
+     * @return void
      */
-    public function handle_callback(WP_REST_Request $request): WP_REST_Response|WP_Error {
+    public function handle_callback(WP_REST_Request $request) {
 
-        /* ----------------------------------------------
-        * 1. Extract & Validate Incoming Parameters
-        * ---------------------------------------------- */
         $code          = $request->get_param('code');
         $state_encoded = $request->get_param('state');
 
         if (empty($code) || empty($state_encoded)) {
-            $error = new WP_Error(
-                'missing_params',
-                'Missing authorization code or state.',
-                ['status' => 400]
-            );
-            $this->log_error($error, 'handle_callback');
-            return $error;
+            wp_die(__('Missing authorization code or state.', 'wpmudev-plugin-test'));
         }
 
-        /* ----------------------------------------------
-        * 2. Decode State Payload (CSRF Protection)
-        * ---------------------------------------------- */
-        $payload = json_decode(base64_decode($state_encoded), true);
-
-        $uuid    = $payload['uuid'] ?? '';
-        $user_id = intval($payload['user_id'] ?? 0);
+        $payload   = json_decode(base64_decode($state_encoded), true);
+        $uuid      = $payload['uuid'] ?? '';
+        $user_id   = intval($payload['user_id'] ?? 0);
+        $return_to = $payload['return_to'] ?? admin_url('admin.php?page=wpmudev-drive');
 
         if ($user_id <= 0) {
-            $error = new WP_Error(
-                'invalid_user',
-                'User ID missing or invalid in callback.',
-                ['status' => 400]
-            );
-            $this->log_error($error, 'handle_callback');
-            return $error;
+            wp_die(__('User ID missing or invalid in callback.', 'wpmudev-plugin-test'));
         }
 
-        /* ----------------------------------------------
-        * 3. Validate Stored OAuth State
-        * ---------------------------------------------- */
         $transient_key = 'wpmudev_drive_oauth_state_' . $user_id;
         $expected_uuid = get_transient($transient_key);
 
         if (empty($uuid) || $uuid !== $expected_uuid) {
-
-            // Log mismatch details for debugging
-            $this->log_error([
-                'user_id'       => $user_id,
-                'error'         => 'State mismatch',
-                'expected_uuid' => $expected_uuid,
-                'received_uuid' => $uuid,
-                'transient_key' => $transient_key,
-            ], 'handle_callback');
-
-            return new WP_Error(
-                'invalid_state',
-                'Invalid state parameter. Possible CSRF detected.',
-                ['status' => 400]
-            );
+            wp_die(__('Invalid state parameter. Possible CSRF detected.', 'wpmudev-plugin-test'));
         }
 
-        // Clear used CSRF state
         delete_transient($transient_key);
 
-        /* ----------------------------------------------
-        * 4. Initialize Google Client
-        * ---------------------------------------------- */
         $this->setup_google_client();
 
         if (!$this->client) {
-            $error = new WP_Error(
-                'client_not_configured',
-                'Google client not configured.',
-                ['status' => 400]
-            );
-            $this->log_error($error, 'handle_callback');
-            return $error;
+            wp_die(__('Google client not configured.', 'wpmudev-plugin-test'));
         }
 
-        /* ----------------------------------------------
-        * 5. Exchange Auth Code for Tokens
-        * ---------------------------------------------- */
         try {
             $token = $this->client->fetchAccessTokenWithAuthCode($code);
 
-            // Log token response for debugging
-            $this->log_error($token, 'token_response');
-
             if (isset($token['error'])) {
-                $error = new WP_Error(
-                    'auth_error',
-                    $token['error_description'] ?? $token['error'],
-                    ['status' => 400]
-                );
-                $this->log_error($error, 'handle_callback');
-                return $error;
+                wp_die(__('Authentication error: ', 'wpmudev-plugin-test') . $token['error_description']);
             }
 
-            /* ----------------------------------------------
-            * 6. Store Refresh Token (encrypted)
-            * ---------------------------------------------- */
             if (isset($token['refresh_token'])) {
                 update_option(
                     'wpmudev_drive_refresh_token',
@@ -523,9 +465,6 @@ class Drive_API extends Base {
                 );
             }
 
-            /* ----------------------------------------------
-            * 7. Store Access Token + Expiry
-            * ---------------------------------------------- */
             update_option('wpmudev_drive_access_token', wp_json_encode($token));
 
             if (isset($token['expires_in'])) {
@@ -535,22 +474,12 @@ class Drive_API extends Base {
                 );
             }
 
-            return new WP_REST_Response([
-                'success' => true,
-                'message' => 'Tokens stored successfully',
-                'user_id' => $user_id,
-            ], 200);
+            // Redirect back to the page user started from
+            wp_safe_redirect($return_to);
+            exit;
 
         } catch (\Exception $e) {
-
-            // Handle unexpected exceptions
-            $error = new WP_Error(
-                'auth_exception',
-                'Failed to get access token: ' . $e->getMessage(),
-                ['status' => 500]
-            );
-            $this->log_error($error, 'handle_callback');
-            return $error;
+            wp_die(__('Failed to get access token: ', 'wpmudev-plugin-test') . $e->getMessage());
         }
     }
 

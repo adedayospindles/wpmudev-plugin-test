@@ -23,10 +23,13 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 
 	/**
 	 * Load files from API or cache.
+	 * @param {string} token
+	 * @param {number} pageNum
+	 * @param {boolean} force - bypass cache
 	 */
-	const loadFiles = async (token = "", pageNum = 1) => {
-		// Use cached page if available
-		if (pageCache[token]) {
+	const loadFiles = async (token = "", pageNum = 1, force = false) => {
+		// Use cached page if available, unless force reload
+		if (!force && pageCache[token]) {
 			setFiles(pageCache[token].files);
 			setNextPageToken(pageCache[token].nextPageToken || "");
 			setPageToken(token);
@@ -155,14 +158,19 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 			);
 
 			if (res?.success) {
+				// Optimistic update: remove file immediately from local state
+				setFiles((prev) => prev.filter((f) => f.id !== fileId));
+
 				showNotice(
 					__("File deleted successfully", "wpmudev-plugin-test"),
 					"success"
 				);
+
+				// Clear cache and force reload to ensure fresh data
 				setPageCache({});
 				setPrevTokens([]);
 				setPage(1);
-				loadFiles(pageToken, page); // reload current page
+				await loadFiles(pageToken, page, true);
 			} else throw new Error(res?.message || "Delete failed");
 		} catch (e) {
 			showNotice(
@@ -185,7 +193,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 			setPageCache({});
 			setPrevTokens([]);
 			setPage(1);
-			loadFiles("", 1);
+			loadFiles("", 1, true); // force reload
 		}
 	}, [refreshTrigger]);
 
@@ -206,7 +214,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 							setPageCache({});
 							setPrevTokens([]);
 							setPage(1);
-							loadFiles("", 1);
+							loadFiles("", 1, true);
 						}}
 						disabled={isLoadingFiles}
 					>

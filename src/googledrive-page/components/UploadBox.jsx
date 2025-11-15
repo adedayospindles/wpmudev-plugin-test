@@ -14,7 +14,7 @@ const apiBase = "/wp-json/";
  * UploadBox component
  * Allows drag/drop or picker-based upload to Google Drive.
  */
-const UploadBox = ({ showNotice, loadFiles }) => {
+const UploadBox = ({ showNotice, onUploadComplete }) => {
 	const inputRef = useRef(null);
 
 	// State
@@ -162,8 +162,14 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 
 		setIsUploading(false);
 		if (inputRef.current) inputRef.current.value = "";
-		setSelectedFiles([]);
-		loadFiles("", 1); // refresh file list after upload
+
+		// Show global success notice
+		showNotice(__("Upload complete", "wpmudev-plugin-test"), "success");
+
+		// Trigger parent refresh
+		if (onUploadComplete) onUploadComplete();
+
+		// Do not clear selectedFiles here — let user see "done"
 	};
 
 	/**

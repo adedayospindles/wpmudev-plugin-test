@@ -11,9 +11,9 @@ const apiBase = "/wp-json/";
  *
  * Props:
  * - showNotice: function to show success/error messages
- * - loadFiles: function to reload the file list after creation
+ * - onFolderCreated: callback to trigger FileList refresh after creation
  */
-const FolderBox = ({ showNotice, loadFiles }) => {
+const FolderBox = ({ showNotice, onFolderCreated }) => {
 	const [folderName, setFolderName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -38,8 +38,12 @@ const FolderBox = ({ showNotice, loadFiles }) => {
 					__("Folder created successfully.", "wpmudev-plugin-test"),
 					"success"
 				);
-				loadFiles();
-			} else throw new Error(res?.message || "Create failed");
+
+				// Trigger parent refresh
+				if (onFolderCreated) onFolderCreated();
+			} else {
+				throw new Error(res?.message || "Create failed");
+			}
 		} catch (e) {
 			showNotice(
 				`${__("Create folder error:", "wpmudev-plugin-test")} ${e.message}`,
