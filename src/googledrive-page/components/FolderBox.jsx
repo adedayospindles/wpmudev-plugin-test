@@ -57,7 +57,7 @@ const FolderBox = ({ showNotice, loadFiles }) => {
 					{__("Create New Folder", "wpmudev-plugin-test")}
 				</h2>
 			</div>
-			<div className="sui-box-body">
+			<div className="sui-box-body gdrive-inline-field">
 				<TextControl
 					label={__("Folder Name", "wpmudev-plugin-test")}
 					value={folderName}
@@ -65,6 +65,7 @@ const FolderBox = ({ showNotice, loadFiles }) => {
 					placeholder={__("Enter folder name", "wpmudev-plugin-test")}
 				/>
 			</div>
+
 			<div className="sui-box-footer">
 				<div className="sui-actions-right">
 					<Button

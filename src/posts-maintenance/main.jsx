@@ -140,6 +140,7 @@ const PostsMaintenanceApp = () => {
 			{/* Footer with Scan button */}
 			<div className="sui-box-footer">
 				<Button
+					className="btn-primary pm-scan-button"
 					variant="primary"
 					onClick={handleScan}
 					disabled={

@@ -12,6 +12,7 @@ module.exports = function (grunt) {
 		"assets/**", // Include compiled assets
 		"uninstall.php",
 		"changelog.txt",
+		"readme.txt",
 		"wpmudev-plugin-test.php",
 
 		// Runtime dependencies
@@ -36,6 +37,7 @@ module.exports = function (grunt) {
 		"README.md",
 		"composer.json",
 		"package.json",
+		".distignore",
 		"!Gruntfile.js",
 		"!gulpfile.js",
 		"!webpack.config.js",

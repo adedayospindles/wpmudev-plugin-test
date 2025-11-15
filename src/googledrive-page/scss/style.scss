@@ -1,11 +1,130 @@
-// --------------------- Font & Image Paths ---------------------
+// -------------------------------------------------------------
+// WPMUDEV Google Drive UI SCSS
+// Author: Adedayo Agboola
+// Palette: primary = #0073aa, neutrals, success, danger, warning
+// -------------------------------------------------------------
+
+// --------------------- 1. Variables & Paths -------------------
 $sui-font-path: "~@wpmudev/shared-ui/dist/fonts/";
 $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 
-// Import WPMUDEV shared UI
+/* Colors */
+$color-primary: #0073aa;
+$color-primary-dark: darken($color-primary, 6%);
+$color-black: #1e1e1e;
+$color-white: #ffffff;
+$color-muted: #757575;
+$color-muted-2: #666;
+$color-border: #e0e0e0;
+$color-surface: #f7f7f7;
+$color-surface-alt: #f5f5f5;
+$color-light: #fafafa;
+$color-dashed: #c3c4c7;
+
+$color-success: #28a745;
+$color-danger: #d63638;
+$color-warning-bg: #fff3cd;
+$color-warning-border: #ffeeba;
+$color-warning-accent: #ff9800;
+
+/* Spacing & sizing */
+$pad-sm: 6px;
+$pad-md: 12px;
+$pad-lg: 20px;
+$radius-sm: 2px;
+$radius-md: 4px;
+
+/* Typography */
+$font-sans: Arial, sans-serif;
+$font-size-base: 14px;
+$font-size-small: 12px;
+
+/* Breakpoints */
+$bp-sm: 600px;
+$bp-md: 900px;
+$bp-lg: 1200px;
+
+/* Utility mixins */
+@mixin focus-ring($color: $color-primary) {
+	outline: 3px solid rgba(red($color), green($color), blue($color), 0.12);
+	outline-offset: 2px;
+}
+
+/* Button reset */
+%btn-base {
+	border: none;
+	border-radius: $radius-sm;
+	font-family: inherit;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	cursor: pointer;
+	padding: 8px 14px;
+	font-size: $font-size-base;
+	transition:
+		background-color 0.18s ease,
+		transform 0.08s ease,
+		filter 0.12s ease;
+	&:disabled {
+		background-color: #ccc;
+		cursor: not-allowed;
+		opacity: 0.9;
+	}
+}
+
+// --------------------- 2. Imports --------------------------------
 @import "@wpmudev/shared-ui";
 
-// --------------------- General SUI Box Adjustments ---------------------
+// --------------------- 3. Global Layout ---------------------------
+.sui-wrap {
+	padding: 20px;
+	background-color: $color-white;
+	font-family: $font-sans;
+	color: $color-black;
+}
+
+/* Base SUI box */
+.sui-box {
+	background-color: $color-surface;
+	border: 1px solid $color-border;
+	margin-bottom: 24px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: $pad-md;
+	border-radius: $radius-md;
+}
+
+/* Alternate row background for visual rhythm */
+.sui-box:nth-of-type(even) {
+	background-color: $color-surface-alt;
+}
+
+// Header/footer consistent spacing
+.sui-box-header,
+.sui-box-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+/* Actions groups inside headers/footers */
+.sui-actions-left,
+.sui-actions-right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* Description */
+.sui-description {
+	font-size: 13px;
+	color: $color-muted;
+	margin-bottom: 0;
+}
+
+// --------------------- 4. Form Controls & Inputs ------------------
 .sui-box-body {
 	.components-base-control {
 		width: 100%;
@@ -13,33 +132,45 @@ $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 		flex-direction: column;
 		gap: 6px;
 
-		input[type="text"],
-		input[type="url"],
-		input[type="email"],
-		select {
-			width: 100%;
-			border: 1px solid #ccc;
-			padding: 8px 10px;
-			font-size: 14px;
-			font-family: Arial, sans-serif;
-			line-height: 1.4;
-			transition: border-color 0.2s ease;
-
-			&:focus {
-				border-color: #0073aa;
-				outline: none;
-			}
-		}
-
 		label {
 			font-weight: 600;
 			font-size: 13px;
 			margin-bottom: 4px;
+			color: $color-black;
+		}
+
+		input[type="text"],
+		input[type="url"],
+		input[type="email"],
+		select,
+		textarea {
+			width: 100%;
+			border: 1px solid #ccc;
+			padding: 8px 10px;
+			font-size: $font-size-base;
+			font-family: $font-sans;
+			line-height: 1.4;
+			border-radius: $radius-sm;
+			transition:
+				border-color 0.16s ease,
+				box-shadow 0.12s ease;
+			background: $color-white;
+
+			&:focus {
+				border-color: $color-primary;
+				@include focus-ring($color-primary);
+				outline: none;
+			}
+		}
+
+		.components-base-control__help {
+			font-size: $font-size-small;
+			color: $color-muted-2;
 		}
 	}
 }
 
-// --------------------- Google Drive Input ---------------------
+// --------------------- 5. Drive Input / Drop Zone -----------------
 .drive-file-input {
 	display: flex;
 	align-items: center;
@@ -47,75 +178,106 @@ $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 	width: 100%;
 	min-height: 48px;
 	padding: 12px !important;
-	border: 2px dashed #c3c4c7;
+	border: 2px dashed $color-dashed;
 	background: #f6f7f7;
 	cursor: pointer;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
 	text-align: center;
+	font-family: $font-sans;
+	font-size: $font-size-base;
 	transition:
-		border-color 0.2s ease,
-		background 0.2s ease;
+		border-color 0.18s ease,
+		background 0.18s ease;
+	border-radius: $radius-sm;
 
 	&:hover,
-	&:focus {
-		border-color: #0073aa;
+	&:focus,
+	&.is-focus {
+		border-color: $color-primary;
 		background: #f0f6fc;
-		outline: none;
+		@include focus-ring($color-primary);
 	}
 }
 
-// --------------------- Loading State ---------------------
-.drive-loading,
-.drive-loading-more {
-	text-align: center;
-	padding: 20px 15px;
-	margin-top: 12px;
+/* Create folder */
 
-	.components-spinner {
-		margin: 0 auto 8px;
+.gdrive-inline-field {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+
+	// Target the TextControl wrapper
+	.components-base-control {
+		display: flex;
+		align-items: center;
+
+		.components-base-control__label {
+			margin: 0;
+			font-weight: 600;
+			flex: 0 0 auto; // label only takes its natural width
+		}
+
+		.components-base-control__field {
+			flex: 0 0 auto; // prevent stretching
+			width: 220px; // fixed width for input (adjust as needed)
+			max-width: 100%; // keeps it responsive if container is narrow
+		}
+	}
+}
+
+/* Upload / drop-zone specifics */
+
+.drive-drop-zone {
+	border: 2px dashed $color-dashed;
+	border-radius: $radius-md;
+	padding: 20px;
+	cursor: pointer;
+	transition:
+		background-color 0.22s,
+		border-color 0.22s;
+
+	&.drag-over {
+		background-color: #f0f8ff;
+		border-color: $color-primary;
 	}
 
 	p {
-		color: #666;
-		font-size: 14px;
-		margin: 0;
+		margin: 0 0 10px;
+		font-size: $font-size-base;
+		color: $color-muted-2;
 	}
 }
 
-// --------------------- Files Grid ---------------------
+// --------------------- 6. Files Grid & Items ----------------------
 .drive-files-grid {
 	display: grid;
 	gap: 16px;
 	align-items: stretch;
 	box-sizing: border-box;
-	padding: 0 20px;
 	max-width: 100%;
-	margin: 0 auto;
+	margin: 0;
 
-	// Mobile-first responsive grid
+	/* Mobile-first responsive grid */
 	grid-template-columns: 1fr;
-
-	@media (min-width: 600px) {
+	@media (min-width: $bp-sm) {
 		grid-template-columns: repeat(2, 1fr);
 	}
-	@media (min-width: 900px) {
+	@media (min-width: $bp-md) {
 		grid-template-columns: repeat(3, 1fr);
 	}
-	@media (min-width: 1200px) {
+	@media (min-width: $bp-lg) {
 		grid-template-columns: repeat(4, 1fr);
 	}
 
 	.drive-file-item {
 		border: 1px solid #eee;
-		border-radius: 6px;
+		border-radius: $radius-md;
 		padding: 12px;
-		background: #fafafa;
+		background: $color-light;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		transition: box-shadow 0.2s;
 		overflow-wrap: anywhere;
+		transition: box-shadow 0.18s ease;
 
 		&:hover {
 			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -129,12 +291,12 @@ $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 				margin-bottom: 4px;
 				font-size: 13px;
 				font-weight: 600;
-				color: #1e1e1e;
+				color: $color-black;
 			}
 
 			small {
-				color: #666;
-				font-size: 12px;
+				color: $color-muted-2;
+				font-size: $font-size-small;
 			}
 		}
 
@@ -143,30 +305,311 @@ $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 			gap: 8px;
 			flex-wrap: wrap;
 			margin-top: auto;
+			align-items: center;
+
+			/* Link-style drive view */
+			.btn-view-in-drive {
+				@extend %btn-base;
+				background: none;
+				color: $color-primary;
+				padding: 0;
+				font-size: 13px;
+				text-transform: none;
+				text-decoration: underline;
+
+				&:hover {
+					text-decoration: none;
+					filter: brightness(0.96);
+				}
+			}
+
+			a,
+			button {
+				font-size: $font-size-small;
+			}
 		}
 	}
 }
 
-// --------------------- Description ---------------------
-.sui-description {
-	font-size: 13px;
-	color: #757575;
-	margin-bottom: 20px;
+// --------------------- 7. Buttons (Unified) -----------------------
+/* Generic components-button adjustments (applies to SUI buttons) */
+.components-button {
+	@extend %btn-base;
+	font-size: 12px;
+	height: 32px;
+	padding: 5px 10px;
+	border-radius: $radius-sm;
+	box-shadow: none;
+	line-height: 1.2;
+	background: $color-primary;
+	color: $color-white;
+
+	&.is-secondary {
+		background: #f1f1f1;
+		color: #333;
+	}
+
+	&.is-primary {
+		background: $color-primary;
+		color: $color-white;
+	}
+
+	&.is-link {
+		background: transparent;
+		color: $color-primary;
+		text-decoration: underline;
+		padding: 0;
+	}
+
+	&:hover {
+		filter: brightness(0.96);
+		transform: translateY(-1px);
+	}
 }
 
-// --------------------- Notices ---------------------
+/* Footer primary buttons */
+.sui-box-footer button {
+	@extend %btn-base;
+	background-color: $color-primary;
+	color: $color-white;
+	border-radius: $radius-sm;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 8px 14px;
+
+	&:hover {
+		background-color: $color-primary-dark;
+		transform: translateY(-1px);
+	}
+}
+
+/* Secondary footer button variant */
+.sui-box-footer .components-button.is-secondary {
+	background-color: #f1f1f1;
+	color: #333;
+
+	&:hover {
+		background-color: darken(#f1f1f1, 4%);
+	}
+}
+
+/* Specific button utilities (kept small and predictable) */
+.btn-clear {
+	@extend %btn-base;
+	background: #999;
+	color: $color-white;
+}
+.btn-download {
+	@extend %btn-base;
+	background: $color-primary;
+	color: $color-white;
+	&:hover {
+		background: $color-primary-dark;
+	}
+}
+.btn-delete {
+	@extend %btn-base;
+	background: $color-danger;
+	color: $color-white;
+	&:hover {
+		background: darken($color-danger, 6%);
+	}
+}
+
+/* Prev/Next pagination */
+.btn-prev,
+.btn-next {
+	@extend %btn-base;
+	background: #f1f1f1;
+	color: #333;
+	&:hover {
+		background: #e0e0e0;
+	}
+}
+
+/* Upload primary: keep distinct (success green) since upload is a positive action */
+.btn-upload {
+	@extend %btn-base;
+	background-color: $color-success;
+	color: $color-white;
+	font-weight: 700;
+
+	&:hover {
+		background-color: darken($color-success, 6%);
+	}
+}
+
+// --------------------- 8. Pagination Controls ---------------------
+.drive-pagination {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 16px;
+	font-size: 13px;
+	color: #555;
+
+	a {
+		color: $color-primary;
+		text-decoration: none;
+		font-size: 13px;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+
+	.drive-pagination-page {
+		font-size: 13px;
+		color: #555;
+	}
+}
+
+// --------------------- 9. Loading States ------------------------
+.drive-loading,
+.drive-loading-more {
+	text-align: center;
+	padding: 20px 15px;
+	margin-top: 12px;
+
+	.components-spinner {
+		margin: 0 auto 8px;
+	}
+	p {
+		color: $color-muted-2;
+		font-size: 14px;
+		margin: 0;
+	}
+}
+
+// --------------------- 10. Upload file list ----------------------
+.upload-file-list {
+	margin-top: 10px;
+
+	.upload-file-row {
+		margin-bottom: 8px;
+		padding: 6px 0;
+		border-bottom: 1px solid #eee;
+
+		strong {
+			display: block;
+			margin-bottom: 4px;
+		}
+
+		.upload-error {
+			color: $color-danger;
+			font-size: $font-size-small;
+			margin-top: 4px;
+		}
+	}
+}
+
+/* Upload mode badge */
+.upload-mode-badge {
+	display: inline-block;
+	margin-left: 12px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+
+	&.sequential {
+		background-color: #f0f8ff;
+		color: $color-primary;
+	}
+	&.parallel {
+		background-color: #e6ffe6;
+		color: #22863a;
+	}
+}
+
+// --------------------- 11. Toggles & Controls --------------------
+.components-toggle-control {
+	margin-top: 10px;
+
+	label {
+		font-weight: 600;
+		color: $color-black;
+	}
+	.components-base-control__help {
+		font-size: $font-size-small;
+		color: $color-muted-2;
+	}
+}
+
+// --------------------- 12. Notices / Alerts -----------------------
 .components-notice {
 	margin: 15px 0;
+	padding: 12px;
+	border-radius: $radius-sm;
+	background: #fff;
+	border: 1px solid lighten($color-border, 6%);
 
 	&.is-success {
-		border-left-color: #00a32a;
+		border-left: 4px solid $color-success;
+		color: $color-black;
 	}
 	&.is-error {
-		border-left-color: #d63638;
+		border-left: 4px solid $color-danger;
+		color: $color-black;
+	}
+
+	&.is-warning {
+		background-color: $color-warning-bg;
+		border: 1px solid $color-warning-border;
+		border-left: 4px solid $color-warning-accent;
+		color: $color-black;
+		padding: 16px;
+		font-size: 12px;
+		font-weight: 500;
+		margin-bottom: 15px;
+		&::before {
+			content: "⚠️";
+			margin-right: 5px;
+			font-size: 14px;
+		}
+		a {
+			color: darken($color-warning-accent, 4%);
+			text-decoration: none;
+		}
 	}
 }
 
-// --------------------- Responsive ---------------------
+.components-notice {
+	margin: 15px 0;
+}
+
+/* Specific delete limit notice */
+.delete-limit-notice {
+	background: $color-warning-bg;
+	border: 1px solid $color-warning-border;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+	color: #856404;
+	font-size: 14px;
+}
+
+// --------------------- 13. File Actions (destructive & locked) -
+.file-actions {
+	.components-button.is-destructive {
+		background-color: $color-danger;
+		color: $color-white;
+		&:hover {
+			background-color: darken($color-danger, 6%);
+		}
+	}
+
+	.sui-button[disabled] {
+		opacity: 0.6;
+		cursor: not-allowed;
+		&::after {
+			content: " 🔒";
+		}
+	}
+}
+
+// --------------------- 14. Responsive Tweaks --------------------
 @media (max-width: 768px) {
 	.drive-file-item {
 		flex-direction: column;
@@ -184,193 +627,15 @@ $sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 	}
 }
 
-// --------------------- Pagination Controls ---------------------
-.drive-pagination {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-top: 16px;
-
-	.components-button {
-		font-size: 12px;
-		height: 32px;
-		padding: 0 12px;
-		border-radius: 0;
-		box-shadow: none;
-
-		&.is-secondary {
-			background: #f1f1f1;
-			color: #333;
-
-			&:hover {
-				filter: brightness(0.95);
-			}
-		}
-
-		&.is-primary {
-			background: #0073aa;
-			color: #fff;
-
-			&:hover {
-				filter: brightness(0.95);
-			}
-		}
-	}
-
-	.drive-pagination-page {
-		font-size: 13px;
-		color: #555;
-	}
-}
-
-// --------------------- Unified Button Styles ---------------------
-.drive-files-grid .components-button,
-.sui-actions-right .components-button,
-.sui-box-settings-row .components-button,
-.drive-pagination .components-button {
-	font-family: Arial, sans-serif;
-	font-size: 12px;
-	height: 32px;
-	padding: 5px;
-	line-height: 1.2;
-	border-radius: 0;
-	box-shadow: none;
-	transition:
-		background 0.2s ease,
-		filter 0.2s ease;
-
-	&.is-secondary {
-		background: #f1f1f1;
-		color: #333;
-
-		&:hover {
-			filter: brightness(0.95);
-		}
-	}
-
-	&.is-primary {
-		background: #0073aa;
-		color: #fff;
-
-		&:hover {
-			filter: brightness(0.95);
-		}
-	}
-
-	&.is-link {
-		background: none;
-		color: #0073aa;
-		text-decoration: underline;
-
-		&:hover {
-			filter: brightness(0.95);
-		}
-	}
-}
-
-// --------------------- Upload Box ---------------------
-.drive-drop-zone {
-	border: 2px dashed #ccc;
-	border-radius: 5px;
-	padding: 20px;
-	cursor: pointer;
-	transition:
-		background-color 0.3s,
-		border-color 0.3s;
-
-	&.drag-over {
-		background-color: #f0f8ff;
-		border-color: #0073aa;
-	}
-
-	p {
-		margin-bottom: 10px;
-		font-size: 14px;
-		color: #555;
-	}
-}
-
-.upload-file-list {
-	margin-top: 10px;
-
-	.upload-file-row {
-		margin-bottom: 8px;
-		padding: 6px 0;
-		border-bottom: 1px solid #eee;
-
-		strong {
-			display: block;
-			margin-bottom: 4px;
-		}
-
-		.upload-error {
-			color: #d63638;
-			font-size: 12px;
-			margin-top: 4px;
-		}
-	}
-}
-
-// --------------------- Toggle ---------------------
-.components-toggle-control {
-	margin-top: 10px;
-
-	label {
-		font-weight: 600;
-		color: #333;
-	}
-
-	.components-base-control__help {
-		font-size: 12px;
-		color: #666;
-	}
-}
-
-.upload-mode-badge {
-	display: inline-block;
-	margin-left: 12px;
-	padding: 4px 8px;
-	border-radius: 4px;
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-
-	&.sequential {
-		background-color: #f0f8ff;
-		color: #0073aa;
-	}
-	&.parallel {
-		background-color: #e6ffe6;
-		color: #22863a;
-	}
-}
-
-// --------------------- File Actions ---------------------
-.file-actions .components-button.is-destructive {
-	background-color: #d63638;
-	color: #fff;
-
-	&:hover {
-		background-color: #b32d2e;
-	}
-}
-
-.file-actions .sui-button[disabled] {
-	opacity: 0.6;
-	cursor: not-allowed;
-
-	&::after {
-		content: " 🔒";
-	}
-}
-
-// --------------------- Delete Notice ---------------------
-.delete-limit-notice {
-	background: #fff3cd;
-	border: 1px solid #ffeeba;
-	padding: 10px;
-	border-radius: 4px;
-	margin-bottom: 15px;
-	color: #856404;
-	font-size: 14px;
+// --------------------- 15. Accessibility helpers -----------------
+.visually-hidden {
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap;
+	border: 0;
+	padding: 0;
+	margin: -1px;
 }

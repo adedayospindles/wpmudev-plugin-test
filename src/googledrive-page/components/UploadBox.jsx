@@ -253,6 +253,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 			<div className="sui-box-footer">
 				<div className="sui-actions-left">
 					<Button
+						className="btn-clear"
 						variant="secondary"
 						onClick={clearSelection}
 						disabled={isUploading || !selectedFiles.length}
@@ -274,6 +275,7 @@ const UploadBox = ({ showNotice, loadFiles }) => {
 
 				<div className="sui-actions-right">
 					<Button
+						className="btn-upload"
 						variant="primary"
 						onClick={handleUpload}
 						disabled={isUploading || !selectedFiles.length}

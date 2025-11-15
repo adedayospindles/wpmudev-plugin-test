@@ -59,7 +59,7 @@ const ScanHistory = () => {
 			<h4>{__("Scan History", "wpmudev-plugin-test")}</h4>
 
 			{/* ---------------- Filters ---------------- */}
-			<div style={{ display: "flex", gap: "1em", marginBottom: "1em" }}>
+			<div className="pm-filters">
 				<SelectControl
 					label={__("Filter by Post Type", "wpmudev-plugin-test")}
 					value={filterType}
@@ -101,10 +101,10 @@ const ScanHistory = () => {
 					<table className="pm-history-table">
 						<thead>
 							<tr>
-								<th>{__("Post ID", "wpmudev-plugin-test")}</th>
-								<th>{__("Type", "wpmudev-plugin-test")}</th>
-								<th>{__("Source", "wpmudev-plugin-test")}</th>
-								<th>{__("Timestamp", "wpmudev-plugin-test")}</th>
+								<th scope="col">{__("Post ID", "wpmudev-plugin-test")}</th>
+								<th scope="col">{__("Type", "wpmudev-plugin-test")}</th>
+								<th scope="col">{__("Source", "wpmudev-plugin-test")}</th>
+								<th scope="col">{__("Timestamp", "wpmudev-plugin-test")}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -120,21 +120,22 @@ const ScanHistory = () => {
 					</table>
 
 					{/* ---------------- Pagination Controls ---------------- */}
-					<div
-						style={{
-							marginTop: "1em",
-							display: "flex",
-							gap: "1em",
-							alignItems: "center",
-						}}
-					>
-						<Button isSecondary onClick={goPrev} disabled={currentPage === 1}>
+					<div className="pm-pagination">
+						<Button
+							className="btn-prev"
+							isSecondary
+							onClick={goPrev}
+							disabled={currentPage === 1}
+						>
 							{__("Prev", "wpmudev-plugin-test")}
 						</Button>
-						<span>
+
+						<span className="pagination-info">
 							{__("Page", "wpmudev-plugin-test")} {currentPage} / {totalPages}
 						</span>
+
 						<Button
+							className="btn-next"
 							isSecondary
 							onClick={goNext}
 							disabled={currentPage === totalPages}

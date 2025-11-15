@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-14T19:26:41+00:00\n"
+"POT-Creation-Date: 2025-11-15T13:08:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -38,7 +38,7 @@ msgstr ""
 
 #: app/admin-pages/class-posts-maintenance.php:66
 #: app/admin-pages/class-posts-maintenance.php:67
-#: assets/js/postsmaintenancepage.min.js:531
+#: assets/js/postsmaintenancepage.min.js:532
 msgid "Posts Maintenance"
 msgstr ""
 
@@ -113,7 +113,7 @@ msgid "This app can only delete files it created or owns."
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-api.php:1055
-#: assets/js/drivetestpage.min.js:916
+#: assets/js/drivetestpage.min.js:919
 msgid "File deleted successfully"
 msgstr ""
 
@@ -208,133 +208,133 @@ msgstr ""
 msgid "Select file(s) to upload"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:630
+#: assets/js/drivetestpage.min.js:631
 msgid "Clear"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:634
+#: assets/js/drivetestpage.min.js:635
 msgid "Upload Mode"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:637
+#: assets/js/drivetestpage.min.js:638
 msgid "Currently sequential (one by one)"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:638
+#: assets/js/drivetestpage.min.js:639
 msgid "Currently parallel (all at once)"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:654
+#: assets/js/drivetestpage.min.js:656
 msgid "Upload Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:659
+#: assets/js/drivetestpage.min.js:661
 msgid "Sequential"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:660
+#: assets/js/drivetestpage.min.js:662
 msgid "Parallel"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:707
+#: assets/js/drivetestpage.min.js:709
 msgid "Folder created successfully."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:714
+#: assets/js/drivetestpage.min.js:716
 msgid "Create folder error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:726
+#: assets/js/drivetestpage.min.js:728
 msgid "Create New Folder"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:731
+#: assets/js/drivetestpage.min.js:733
 msgid "Folder Name"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:734
+#: assets/js/drivetestpage.min.js:736
 msgid "Enter folder name"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:747
+#: assets/js/drivetestpage.min.js:750
 msgid "Create Folder"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:825
+#: assets/js/drivetestpage.min.js:828
 msgid "Failed to load files:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:883
+#: assets/js/drivetestpage.min.js:886
 msgid "Download ready"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:887
+#: assets/js/drivetestpage.min.js:890
 msgid "Download error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:900
-#: assets/js/drivetestpage.min.js:1038
+#: assets/js/drivetestpage.min.js:903
+#: assets/js/drivetestpage.min.js:1043
 msgid "Delete"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:926
+#: assets/js/drivetestpage.min.js:929
 msgid "Delete error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:957
+#: assets/js/drivetestpage.min.js:960
 msgid "Your Drive Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:973
+#: assets/js/drivetestpage.min.js:976
 msgid "Refresh Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:983
+#: assets/js/drivetestpage.min.js:986
 msgid "Only files created by this app can be deleted. Other files are read‑only due to Google Drive permissions."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1016
+#: assets/js/drivetestpage.min.js:1020
 msgid "Download"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1028
+#: assets/js/drivetestpage.min.js:1033
 msgid "This file cannot be deleted due to limited permissions"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1050
+#: assets/js/drivetestpage.min.js:1056
 msgid "View in Drive"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1065
+#: assets/js/drivetestpage.min.js:1072
 #: assets/js/postsmaintenancepage.min.js:222
 msgid "Previous"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1072
+#: assets/js/drivetestpage.min.js:1080
 #: assets/js/postsmaintenancepage.min.js:229
-#: assets/js/postsmaintenancepage.min.js:426
+#: assets/js/postsmaintenancepage.min.js:427
 msgid "Next"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1075
+#: assets/js/drivetestpage.min.js:1083
 #: assets/js/postsmaintenancepage.min.js:232
-#: assets/js/postsmaintenancepage.min.js:419
+#: assets/js/postsmaintenancepage.min.js:418
 msgid "Page"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1082
+#: assets/js/drivetestpage.min.js:1090
 msgid "Loading files..."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1087
+#: assets/js/drivetestpage.min.js:1095
 msgid "No files found. Upload one to get started."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1098
+#: assets/js/drivetestpage.min.js:1107
 msgid "Upload File"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1108
+#: assets/js/drivetestpage.min.js:1117
 msgid "Loading more files..."
 msgstr ""
 
@@ -403,22 +403,22 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: assets/js/postsmaintenancepage.min.js:416
+#: assets/js/postsmaintenancepage.min.js:414
 msgid "Prev"
 msgstr ""
 
-#: assets/js/postsmaintenancepage.min.js:431
+#: assets/js/postsmaintenancepage.min.js:432
 msgid "No scan history found."
 msgstr ""
 
-#: assets/js/postsmaintenancepage.min.js:517
+#: assets/js/postsmaintenancepage.min.js:518
 msgid "Error:"
 msgstr ""
 
-#: assets/js/postsmaintenancepage.min.js:550
+#: assets/js/postsmaintenancepage.min.js:551
 msgid "Select a post type and choose specific posts to scan."
 msgstr ""
 
-#: assets/js/postsmaintenancepage.min.js:587
+#: assets/js/postsmaintenancepage.min.js:589
 msgid "Scan Posts"
 msgstr ""

@@ -249,6 +249,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 									<div className="file-actions">
 										{file.mimeType !== "application/vnd.google-apps.folder" && (
 											<Button
+												className="btn-download"
 												variant="secondary"
 												onClick={() => handleDownload(file.id, file.name)}
 												disabled={downloadingId === file.id}
@@ -262,6 +263,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 										)}
 
 										<Button
+											className="btn-delete"
 											variant="secondary"
 											isDestructive
 											onClick={() => handleDelete(file.id, file.name)}
@@ -284,6 +286,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 
 										{file.webViewLink && (
 											<Button
+												className="btn-view-in-drive"
 												variant="link"
 												size="small"
 												href={file.webViewLink}
@@ -301,6 +304,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 						{/* Pagination */}
 						<div className="drive-pagination">
 							<Button
+								className="btn-prev"
 								variant="secondary"
 								onClick={handlePrev}
 								disabled={page <= 1 || isLoadingFiles}
@@ -308,6 +312,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 								{__("Previous", "wpmudev-plugin-test")}
 							</Button>
 							<Button
+								className="btn-next"
 								variant="secondary"
 								onClick={handleNext}
 								disabled={!nextPageToken || isLoadingFiles}
@@ -333,6 +338,7 @@ const FileList = ({ showNotice, refreshTrigger }) => {
 							)}
 						</p>
 						<Button
+							className="btn-upload"
 							variant="primary"
 							onClick={() =>
 								document.querySelector(".drive-file-input")?.click()
