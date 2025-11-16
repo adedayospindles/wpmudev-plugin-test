@@ -5,6 +5,7 @@ import { createInterpolateElement } from "@wordpress/element";
 import { fetchJson } from "../utils/helpers";
 
 // const apiBase = "/wp-json/";
+// const apiBase = window.wpmudevDriveTest.restBase;
 
 /**
  * AuthBox component for managing Google Drive authentication.
