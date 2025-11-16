@@ -3,7 +3,8 @@ import { Button, TextControl, Spinner } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { fetchJson } from "../utils/helpers";
 
-const apiBase = "/wp-json/";
+//const apiBase = "/wp-json/";
+const apiBase = window.wpmudevDriveTest.restBase;
 
 /**
  * FolderBox

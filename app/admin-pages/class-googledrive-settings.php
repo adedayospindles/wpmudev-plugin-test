@@ -110,6 +110,9 @@ class Google_Drive extends Base {
             'localize'  => array(
                 // ID of main React mount element
                 'dom_element_id'       => $this->unique_id,
+                
+                // REST base URL
+                'restBase' => esc_url_raw( rest_url() ),
 
                 // REST endpoints for Drive actions
                 'restEndpointSave'     => 'wpmudev/v1/drive/save-credentials',

@@ -4,7 +4,7 @@ import { __ } from "@wordpress/i18n";
 import { createInterpolateElement } from "@wordpress/element";
 import { fetchJson } from "../utils/helpers";
 
-const apiBase = "/wp-json/";
+// const apiBase = "/wp-json/";
 
 /**
  * AuthBox component for managing Google Drive authentication.
@@ -49,7 +49,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 			};
 
 			const res = await fetchJson(
-				apiBase + window.wpmudevDriveTest.restEndpointSave,
+				//apiBase + window.wpmudevDriveTest.restEndpointSave,
+				window.wpmudevDriveTest.restBase +
+					window.wpmudevDriveTest.restEndpointSave,
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
@@ -89,7 +91,9 @@ const AuthBox = ({ showNotice, setHasCredentials }) => {
 		setIsLoading(true);
 		try {
 			const res = await fetchJson(
-				apiBase + window.wpmudevDriveTest.restEndpointAuth,
+				//apiBase + window.wpmudevDriveTest.restEndpointAuth,
+				window.wpmudevDriveTest.restBase +
+					window.wpmudevDriveTest.restEndpointAuth,
 				{ method: "POST" }
 			);
 

@@ -12,6 +12,10 @@ export const fetchJson = async (url, opts = {}) => {
 	// Attach WordPress nonce for authentication
 	opts.headers["X-WP-Nonce"] = window.wpmudevDriveTest.nonce;
 
+	// Ensure WordPress sees the logged-in user
+	opts.credentials = "same-origin";
+
+	// Perform the fetch request
 	const res = await fetch(url, opts);
 
 	// Throw an error if response is not ok

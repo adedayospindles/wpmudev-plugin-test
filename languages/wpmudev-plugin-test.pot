@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-15T20:58:05+00:00\n"
+"POT-Creation-Date: 2025-11-16T00:32:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -137,7 +137,7 @@ msgid "This app can only delete files it created or owns."
 msgstr ""
 
 #: app/endpoints/v1/class-googledrive-api.php:984
-#: assets/js/drivetestpage.min.js:936
+#: assets/js/drivetestpage.min.js:947
 msgid "File deleted successfully"
 msgstr ""
 
@@ -159,210 +159,210 @@ msgstr ""
 msgid "An unexpected error occurred in the Google Drive interface. Please refresh the page or try again later."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:182
+#: assets/js/drivetestpage.min.js:188
 msgid "Credentials saved. You can now authenticate."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:193
+#: assets/js/drivetestpage.min.js:199
 msgid "Failed to save credentials:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:221
+#: assets/js/drivetestpage.min.js:229
 msgid "Authentication failed:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:237
+#: assets/js/drivetestpage.min.js:245
 msgid "Set Google Drive Credentials"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:243
+#: assets/js/drivetestpage.min.js:251
 msgid "Client ID"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:247
+#: assets/js/drivetestpage.min.js:255
 msgid "You can get Client ID from <a>Google Cloud Console</a>. Make sure to enable Google Drive API."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:264
+#: assets/js/drivetestpage.min.js:272
 msgid "Client Secret"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:271
+#: assets/js/drivetestpage.min.js:279
 msgid "You can get Client Secret from <a>Google Cloud Console</a>."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:289
+#: assets/js/drivetestpage.min.js:297
 msgid "Required scopes for Google Drive API:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:311
+#: assets/js/drivetestpage.min.js:319
 msgid "Save Credentials"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:328
-#: assets/js/drivetestpage.min.js:355
+#: assets/js/drivetestpage.min.js:336
+#: assets/js/drivetestpage.min.js:363
 msgid "Authenticate with Google Drive"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:334
+#: assets/js/drivetestpage.min.js:342
 msgid "Please authenticate with Google Drive to proceed with the test."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:347
+#: assets/js/drivetestpage.min.js:355
 msgid "Change Credentials"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:457
+#: assets/js/drivetestpage.min.js:466
 msgid "Uploaded"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:510
+#: assets/js/drivetestpage.min.js:519
 msgid "Please select file(s) to upload."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:538
+#: assets/js/drivetestpage.min.js:547
 msgid "Upload complete"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:573
+#: assets/js/drivetestpage.min.js:582
 msgid "Upload Files to Drive"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:587
+#: assets/js/drivetestpage.min.js:596
 msgid "Drag & drop files here or use the picker below:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:598
+#: assets/js/drivetestpage.min.js:607
 msgid "Select file(s) to upload"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:638
+#: assets/js/drivetestpage.min.js:647
 msgid "Clear"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:642
+#: assets/js/drivetestpage.min.js:651
 msgid "Upload Mode"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:645
+#: assets/js/drivetestpage.min.js:654
 msgid "Currently sequential (one by one)"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:646
+#: assets/js/drivetestpage.min.js:655
 msgid "Currently parallel (all at once)"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:663
+#: assets/js/drivetestpage.min.js:672
 msgid "Upload Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:668
+#: assets/js/drivetestpage.min.js:677
 msgid "Sequential"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:669
+#: assets/js/drivetestpage.min.js:678
 msgid "Parallel"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:716
+#: assets/js/drivetestpage.min.js:726
 msgid "Folder created successfully."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:727
+#: assets/js/drivetestpage.min.js:737
 msgid "Create folder error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:739
+#: assets/js/drivetestpage.min.js:749
 msgid "Create New Folder"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:744
+#: assets/js/drivetestpage.min.js:754
 msgid "Folder Name"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:747
+#: assets/js/drivetestpage.min.js:757
 msgid "Enter folder name"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:761
+#: assets/js/drivetestpage.min.js:771
 msgid "Create Folder"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:842
+#: assets/js/drivetestpage.min.js:853
 msgid "Failed to load files:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:900
+#: assets/js/drivetestpage.min.js:911
 msgid "Download ready"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:904
+#: assets/js/drivetestpage.min.js:915
 msgid "Download error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:917
-#: assets/js/drivetestpage.min.js:1062
+#: assets/js/drivetestpage.min.js:928
+#: assets/js/drivetestpage.min.js:1073
 msgid "Delete"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:948
+#: assets/js/drivetestpage.min.js:959
 msgid "Delete error:"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:979
+#: assets/js/drivetestpage.min.js:990
 msgid "Your Drive Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:995
+#: assets/js/drivetestpage.min.js:1006
 msgid "Refresh Files"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1005
+#: assets/js/drivetestpage.min.js:1016
 msgid "Only files created by this app can be deleted. Other files are read‑only due to Google Drive permissions."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1039
+#: assets/js/drivetestpage.min.js:1050
 msgid "Download"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1052
+#: assets/js/drivetestpage.min.js:1063
 msgid "This file cannot be deleted due to limited permissions"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1075
+#: assets/js/drivetestpage.min.js:1086
 msgid "View in Drive"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1091
+#: assets/js/drivetestpage.min.js:1102
 #: assets/js/postsmaintenancepage.min.js:222
 msgid "Previous"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1099
+#: assets/js/drivetestpage.min.js:1110
 #: assets/js/postsmaintenancepage.min.js:229
 #: assets/js/postsmaintenancepage.min.js:427
 msgid "Next"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1102
+#: assets/js/drivetestpage.min.js:1113
 #: assets/js/postsmaintenancepage.min.js:232
 #: assets/js/postsmaintenancepage.min.js:418
 msgid "Page"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1109
+#: assets/js/drivetestpage.min.js:1120
 msgid "Loading files..."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1114
+#: assets/js/drivetestpage.min.js:1125
 msgid "No files found. Upload one to get started."
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1126
+#: assets/js/drivetestpage.min.js:1137
 msgid "Upload File"
 msgstr ""
 
-#: assets/js/drivetestpage.min.js:1136
+#: assets/js/drivetestpage.min.js:1147
 msgid "Loading more files..."
 msgstr ""
 

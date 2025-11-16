@@ -62,7 +62,7 @@ if ( ! defined( 'WPMUDEV_PLUGINTEST_URL' ) ) {
 
 // Assets URL
 if ( ! defined( 'WPMUDEV_PLUGINTEST_ASSETS_URL' ) ) {
-	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . 'assets' ); // Adedayo: no trailing slash
+	define( 'WPMUDEV_PLUGINTEST_ASSETS_URL', WPMUDEV_PLUGINTEST_URL . 'assets' );
 }
 
 // Shared UI Version
