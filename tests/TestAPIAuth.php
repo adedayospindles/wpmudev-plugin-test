@@ -4,7 +4,7 @@
  *
  * This suite tests stubbed handlers directly (no WordPress route registration),
  * so it’s fast and focused on handler logic. For integration tests, use a suite
- * that registers routes and calls rest_do_request().
+ * that registers routes and calls rest_do_request() i.e. TestApiAuthRest.php
  *
  * @package WPMUDEV_Plugin_Test
  */

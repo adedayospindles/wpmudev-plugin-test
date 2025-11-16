@@ -9,7 +9,7 @@ import { __ } from "@wordpress/i18n";
 import { humanSize } from "../utils/helpers";
 
 // const apiBase = "/wp-json/"; // This works only if WordPress is installed at the domain root.
-apiBase = window.wpmudevDriveTest.restBase;
+const apiBase = window.wpmudevDriveTest.restBase;
 
 /**
  * UploadBox component
